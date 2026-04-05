@@ -1,0 +1,42 @@
+{
+  "name": "phex-extension",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Plasmo-based PHEx browser extension",
+  "scripts": {
+    "dev": "plasmo dev",
+    "dev:firefox": "plasmo dev --target=firefox-mv3",
+    "build": "plasmo build",
+    "build:firefox": "plasmo build --target=firefox-mv3",
+    "package": "plasmo package",
+    "package:firefox": "plasmo package --target=firefox-mv3",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.1.24",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "plasmo": "^0.90.5",
+    "typescript": "^6.0.2"
+  },
+  "manifest": {
+    "name": "Prodigy Hacking Extension | PHEx",
+    "description": "Free and open source hacks for Prodigy Math Game",
+    "permissions": [
+      "storage"
+    ],
+    "host_permissions": [
+      "*://*.prodigygame.com/*",
+      "https://raw.githubusercontent.com/*"
+    ],
+    "browser_specific_settings": {
+      "gecko": {
+        "id": "phex@prodigypnp.com"
+      }
+    }
+  }
+}

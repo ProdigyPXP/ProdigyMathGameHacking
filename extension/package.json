@@ -28,17 +28,12 @@
     "description": "Free and open source hacks for Prodigy Math Game",
     "author": "ProdigyPXP",
     "permissions": [
-      "declarativeNetRequest"
+      "declarativeNetRequest",
+      "storage"
     ],
     "host_permissions": [
       "*://*.prodigygame.com/*",
       "https://raw.githubusercontent.com/*"
-    ],
-    "web_accessible_resources": [
-      {
-        "resources": ["assets/game.min.js"],
-        "matches": ["https://math.prodigygame.com/*"]
-      }
     ],
     "browser_specific_settings": {
       "gecko": {

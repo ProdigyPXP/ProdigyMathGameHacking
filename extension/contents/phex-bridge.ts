@@ -3,17 +3,29 @@ import type { PlasmoCSConfig } from "plasmo"
 /**
  * PHEx Bridge — Isolated World Content Script
  *
- * Runs in Chrome's ISOLATED world (has access to chrome.* APIs).
- * Passes the extension's game.min.js URL to the MAIN world content script
- * via a data attribute on <html>. This is needed because MAIN world scripts
- * cannot access chrome.runtime.getURL().
+ * Sets the default remote game URL synchronously so the MAIN world script
+ * can read it immediately. Then reads chrome.storage.local for custom
+ * overrides and updates the attribute + sets a ready signal.
  */
 export const config: PlasmoCSConfig = {
   matches: ["https://math.prodigygame.com/*"],
   run_at: "document_start"
-  // No world: "MAIN" — defaults to ISOLATED world
 }
 
-// Pass the extension URL to the page via DOM attribute
-const gameUrl = chrome.runtime.getURL("assets/game.min.js")
-document.documentElement.setAttribute("data-phex-game-url", gameUrl)
+// Default: fetch patched game live from GitHub
+const defaultGameUrl = "https://raw.githubusercontent.com/ProdigyPXP/P-NP/patched/game.min.js"
+
+// Synchronous — MAIN world can read this immediately
+document.documentElement.setAttribute("data-phex-game-url", defaultGameUrl)
+
+// Async override from storage (custom dev URLs)
+chrome.storage.local.get(["phexGameUrl", "phexGuiUrl"], (result) => {
+  if (result.phexGameUrl) {
+    document.documentElement.setAttribute("data-phex-game-url", result.phexGameUrl)
+  }
+  if (result.phexGuiUrl) {
+    document.documentElement.setAttribute("data-phex-gui-url", result.phexGuiUrl)
+  }
+  // Signal that final URLs (including any overrides) are now set
+  document.documentElement.setAttribute("data-phex-ready", "1")
+})

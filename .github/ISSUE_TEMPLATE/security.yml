@@ -32,7 +32,7 @@ body:
   - type: input
     id: phex
     attributes:
-      label: Vulerable PHEx versions, type LATEST if this is for the latest version, type ALL if this is for all versions.
+      label: Vulerable extension versions, type LATEST if this is for the latest version, type ALL if this is for all versions.
     validations:
       required: true
   - type: input

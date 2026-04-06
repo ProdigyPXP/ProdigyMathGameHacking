@@ -29,7 +29,7 @@ Prodigy Origin is a monorepo for modding Prodigy Math Game. It is maintained by 
 
 ### Related Repos
 
-- **ProdigyPXP/P-NP** — Static patch pipeline. GitHub Action runs every 2 hours, fetches Prodigy game files, patches them, commits to "patched" branch. The extension fetches the patched `game.min.js` from this branch.
+- **ProdigyPXP/P-NP** — Static patch pipeline. GitHub Action runs every 2 hours, fetches Prodigy game files, patches them, commits to `dist/` on master. The extension fetches the patched `game.min.js` from this directory.
 
 ## Critical Rules
 

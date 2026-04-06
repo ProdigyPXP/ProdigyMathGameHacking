@@ -12,8 +12,8 @@ export const config: PlasmoCSConfig = {
   run_at: "document_start"
 }
 
-// Default: fetch patched game live from GitHub
-const defaultGameUrl = "https://raw.githubusercontent.com/ProdigyPXP/P-NP/patched/game.min.js"
+// Default: fetch patched game from P-NP dist/ on master
+const defaultGameUrl = "https://raw.githubusercontent.com/ProdigyPXP/P-NP/master/dist/game.min.js"
 
 // Synchronous — MAIN world can read this immediately
 document.documentElement.setAttribute("data-origin-game-url", defaultGameUrl)

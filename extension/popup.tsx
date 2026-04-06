@@ -96,7 +96,7 @@ function IndexPopup() {
           style={inputStyle}
           value={gameUrl}
           onChange={(e) => setGameUrl(e.target.value)}
-          placeholder="(default: GitHub patched branch)"
+          placeholder="(default: GitHub P-NP/master/dist)"
         />
       </label>
 

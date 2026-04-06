@@ -1,7 +1,7 @@
 // Minigame Hacks
 
 // BEGIN IMPORTS
-import { category } from "../index"; // Import the Cheat GUI bases.
+import { category } from "../index"; // Import the mod menu bases.
 import Toggler from "../class/Toggler";
 import { _ } from "../utils/util";  // Import Prodigy Typings.
 import { Toast } from "../utils/swal"; // Import Toast and NumberInput from swal

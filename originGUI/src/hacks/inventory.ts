@@ -3,7 +3,7 @@
 
 
 // BEGIN IMPORTS
-import { category } from "../index"; // Import the Cheat GUI bases.
+import { category } from "../index"; // Import the mod menu bases.
 import Hack from "../class/Hack";
 import { Swal, Toast, Confirm, NumberInput } from "../utils/swal"; // Import Swal, Toast, NumberInput, and Confirm from swal
 import { _, saveCharacter, VERY_LARGE_NUMBER, player } from "../utils/util"; // Import Prodigy typings

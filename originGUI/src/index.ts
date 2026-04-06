@@ -9,12 +9,12 @@ import Swal from "sweetalert2"; // Import Swal
 import { License, NoLicense } from "./utils/swal";
 
 
-export const menu = document.createElement("div"); // Create cheat menu element
+export const menu = document.createElement("div"); // Create mod menu element
 export const wrapper = document.getElementById("game-wrapper"); // Create game wrapper
 
 document.getElementById("origin-menu")?.remove(); // Remove any existing menu if present
 document.getElementById("origin-toggler")?.remove(); // Remove any existing menu togglers if present
-menu.id = "origin-menu"; // Set menu ID to cheat-menu
+menu.id = "origin-menu"; // Set menu ID
 
 
 menu.style = "position: fixed;top: -10%;left: 10%;right: 10%;width: 80%;height: 80%;z-index: 2;background-color: rgba(0, 0, 0, 0.5);backdrop-filter: blur(5px);"; // Set menu style
@@ -145,14 +145,14 @@ document.addEventListener("keydown", function (event) {
 		console.log("Shift key was pressed.");
 
 		if (shownMenu == true) {
-			// Cheats are shown, so let's hide them.
+			// Mods are shown, so let's hide them.
 			console.log("Hiding mod menu...");
 			document.getElementById("origin-menu").style.display = "none";
 			document.getElementById("origin-toggler").style.display = "none";
 			shownMenu = false;
 			console.log("Hidden mod menu.");
 		} else {
-			// Cheats are hidden, so let's show them.
+			// Mods are hidden, so let's show them.
 			console.log("Showing mod menu...");
 			document.getElementById("origin-menu").style.display = "block";
 			document.getElementById("origin-toggler").style.display = "block";

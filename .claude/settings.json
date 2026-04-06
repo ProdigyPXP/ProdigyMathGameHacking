@@ -17,5 +17,11 @@
       "Write",
       "Read"
     ]
+  },
+  "enabledPlugins": {
+    "marketing-skills@marketingskills": true,
+    "ui-ux-pro-max@ui-ux-pro-max-skill": true,
+    "superpowers@claude-plugins-official": true,
+    "chrome-devtools-mcp@claude-plugins-official": true
   }
 }

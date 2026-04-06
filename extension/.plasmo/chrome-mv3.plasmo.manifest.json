@@ -27,8 +27,18 @@
   "permissions": [
     "scripting",
     "declarativeNetRequest",
-    "declarativeNetRequestFeedback",
     "storage"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://math.prodigygame.com/*"
+      ],
+      "js": [
+        "../contents/phex-bridge.ts"
+      ],
+      "run_at": "document_start"
+    }
   ],
   "host_permissions": [
     "*://*.prodigygame.com/*",

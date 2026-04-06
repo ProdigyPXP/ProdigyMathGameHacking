@@ -1,7 +1,0 @@
-<!--
-
-PLEASE MAKE SURE TO READ THE CONTRIBUTING GUIDELINES OF THIS REPOSITORY BEFORE SUBMITTING YOUR PULL REQUEST.
-
-https://github.com/ProdigyPXP/ProdigyMathGameHacking/blob/master/.github/CONTRIBUTING.md
-
--->

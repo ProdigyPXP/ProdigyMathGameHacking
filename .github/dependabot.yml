@@ -15,7 +15,6 @@ updates:
       prefix: "[cheatGUI]"      
     assignees:
       - "alexey-max-fedorov"
-      - "donaldli2022"  
 
 
   # PHEx
@@ -27,7 +26,6 @@ updates:
       prefix: "[PHEx]"      
     assignees:
       - "alexey-max-fedorov"
-      - "donaldli2022"       
       
       
   # typings
@@ -39,7 +37,6 @@ updates:
       prefix: "[typings]"      
     assignees:
       - "alexey-max-fedorov"
-      - "donaldli2022"  
       
 
   # docs
@@ -51,7 +48,6 @@ updates:
       prefix: "[docs]"      
     assignees:
       - "alexey-max-fedorov"
-      - "donaldli2022"  
       
       
 # GitHub Actions      
@@ -63,4 +59,3 @@ updates:
       prefix: "[Actions]"      
     assignees:
       - "alexey-max-fedorov"
-      - "donaldli2022"     

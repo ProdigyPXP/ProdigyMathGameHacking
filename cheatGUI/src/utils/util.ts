@@ -12,8 +12,31 @@ export const _ = window._;
 /** The player variable */
 export const player = _.player;
 
-/** The alternate hack variable. */
-export const current = window.Boot.prototype.game._state._current;
+/** Gets the currently active Phaser state instance dynamically.
+ *  The old pattern `window.Boot.prototype.game._state._current` was broken:
+ *  Phaser sets `.game` on State *instances* (not the prototype), so prototype.game was null/undefined → crash.
+ *  Use getCurrent() for any live state access. */
+export const getCurrent = (): any => {
+  try {
+    return (window._ as any).instance?.game?.state?.getCurrentState() ?? null;
+  } catch {
+    return null;
+  }
+};
+
+/** Proxy for backward compat — reads/writes delegate to the live current state.
+ *  @deprecated Prefer getCurrent() for clarity. */
+export const current: any = new Proxy({}, {
+  get(_t, prop: string) {
+    const s = getCurrent();
+    return s ? s[prop] : undefined;
+  },
+  set(_t, prop: string, value: any) {
+    const s = getCurrent();
+    if (s) s[prop] = value;
+    return true;
+  }
+});
 
 const base: { game: Game, prodigy: Prodigy } = _.instance;
 

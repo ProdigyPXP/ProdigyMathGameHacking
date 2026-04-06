@@ -61,8 +61,11 @@ new Toggler(category.beta, "FPS Counter [BETA]", "Shows you a framerate counter"
 
 // Begin Unlimited Spins
 try {
-	const canSpinBackup = current.user.source.canSpin;
+	// canSpinBackup captured lazily inside setEnabled so we don't crash at load time.
+	// Old code: `current.user.source.canSpin` — was broken because current was null at load.
+	let canSpinBackup: unknown = null;
 	new Toggler(category.misc, "Unlimited Spins", "Lets you spin the wheel as many times as you want!").setEnabled(async () => {
+		canSpinBackup = player.canSpin; // capture original on first enable
 		player.canSpin = (() => { true; });
 		return Toast.fire("Enabled!", "You can now spin the wheel as many times as you want!", "success");
 	}).setDisabled(async() => {

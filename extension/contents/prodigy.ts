@@ -82,23 +82,30 @@ function isGameScript(node: Node): node is HTMLScriptElement {
   return src.includes("game.min.js") && !origGetAttribute.call(node, "data-origin")
 }
 
-function createCleanGameScript(original: HTMLScriptElement): HTMLScriptElement {
-  const extensionUrl = window.__ORIGIN_GAME_URL__
-  const clean = origCreateElement.call(document, "script") as HTMLScriptElement
-  lockIntegrity(clean)
-  origSetAttribute.call(clean, "data-origin", "1")
+function createNopScript(): HTMLScriptElement {
+  const nop = origCreateElement.call(document, "script") as HTMLScriptElement
+  lockIntegrity(nop)
+  origSetAttribute.call(nop, "data-origin", "1")
+  return nop
+}
 
-  clean.src = extensionUrl || original.src
-
-  if (original.onload) clean.onload = original.onload
-  if (original.onerror) clean.onerror = original.onerror
-  if (original.async) clean.async = original.async
-  if (original.defer) clean.defer = original.defer
-  if (original.type) clean.type = original.type
-  if (original.crossOrigin) clean.crossOrigin = original.crossOrigin
-
-  console.log(`[Origin] Replaced game.min.js with extension URL: ${clean.src}`)
-  return clean
+function injectGameViaFetch(gameUrl: string): void {
+  console.log(`[Origin] Fetching game via fetch+onreset: ${gameUrl}`)
+  fetch(gameUrl)
+    .then(r => {
+      if (!r.ok) throw new Error(`HTTP ${r.status}`)
+      return r.text()
+    })
+    .then(js => {
+      const semaphore = `if(window.SW&&window.SW.Load&&typeof window.SW.Load.decrementLoadSemaphore==='function')window.SW.Load.decrementLoadSemaphore();`
+      document.documentElement.setAttribute("onreset", js + "\n" + semaphore)
+      document.documentElement.dispatchEvent(new CustomEvent("reset"))
+      document.documentElement.removeAttribute("onreset")
+      console.log("[Origin] Game injected via onreset")
+    })
+    .catch(e => {
+      console.error("[Origin] Failed to fetch game:", e)
+    })
 }
 
 function stripIntegrity(node: Node): void {
@@ -112,8 +119,9 @@ function stripIntegrity(node: Node): void {
 
 Node.prototype.appendChild = function <T extends Node>(child: T): T {
   if (isGameScript(child)) {
-    const clean = createCleanGameScript(child as HTMLScriptElement)
-    return origAppendChild.call(this, clean) as unknown as T
+    const gameUrl = window.__ORIGIN_GAME_URL__ || (child as HTMLScriptElement).src
+    injectGameViaFetch(gameUrl)
+    return origAppendChild.call(this, createNopScript()) as unknown as T
   }
   stripIntegrity(child)
   return origAppendChild.call(this, child) as T
@@ -121,8 +129,9 @@ Node.prototype.appendChild = function <T extends Node>(child: T): T {
 
 Node.prototype.insertBefore = function <T extends Node>(newNode: T, refNode: Node | null): T {
   if (isGameScript(newNode)) {
-    const clean = createCleanGameScript(newNode as HTMLScriptElement)
-    return origInsertBefore.call(this, clean, refNode) as unknown as T
+    const gameUrl = window.__ORIGIN_GAME_URL__ || (newNode as HTMLScriptElement).src
+    injectGameViaFetch(gameUrl)
+    return origInsertBefore.call(this, createNopScript(), refNode) as unknown as T
   }
   stripIntegrity(newNode)
   return origInsertBefore.call(this, newNode, refNode) as T
@@ -130,12 +139,12 @@ Node.prototype.insertBefore = function <T extends Node>(newNode: T, refNode: Nod
 
 Element.prototype.append = function (...nodes: (Node | string)[]) {
   const processed = nodes.map(node => {
-    if (node instanceof Node) {
-      if (isGameScript(node)) {
-        return createCleanGameScript(node as HTMLScriptElement)
-      }
-      stripIntegrity(node)
+    if (node instanceof Node && isGameScript(node)) {
+      const gameUrl = window.__ORIGIN_GAME_URL__ || (node as HTMLScriptElement).src
+      injectGameViaFetch(gameUrl)
+      return createNopScript()
     }
+    if (node instanceof Node) stripIntegrity(node)
     return node
   })
   return origAppend.apply(this, processed)
@@ -197,11 +206,6 @@ function rewriteDocument(): void {
       html = html.replace(/\s+integrity\s*=\s*'[^']*'/gi, "")
 
       html = html.replace(
-        /https?:\/\/code\.prodigygame\.com\/code\/[^"']*game\.min\.js[^"']*/gi,
-        extensionGameUrl
-      )
-
-      html = html.replace(
         /<link[^>]*rel=["']preload["'][^>]*game\.min\.js[^>]*>/gi,
         "<!-- Origin: preload removed -->"
       )
@@ -210,16 +214,25 @@ function rewriteDocument(): void {
         "<!-- Origin: preload removed -->"
       )
 
+      // Replace the entire game script tag with an inline fetch+onreset injector.
+      // We cannot use <script src="raw.githubusercontent.com/..."> because GitHub
+      // serves JS as text/plain, which Chrome's strict MIME check rejects.
+      // An inline script fetches the content as text and injects it via onreset,
+      // which executes in MAIN world without any MIME type restriction.
+      const gameUrl = JSON.stringify(extensionGameUrl)
+      const semaphore = `if(window.SW&&window.SW.Load&&typeof window.SW.Load.decrementLoadSemaphore==='function')window.SW.Load.decrementLoadSemaphore();`
+      // Prepend 'var URL=window.URL;' to shadow document.URL (a string) with the real
+      // URL constructor. HTML event handlers include the document in their scope chain,
+      // so 'URL' inside an onreset handler resolves to document.URL (the page URL string)
+      // instead of window.URL (the URL class), breaking 'new URL(...)' calls in the game.
+      const inlineInjector = `<script>(async()=>{try{const js=await(await fetch(${gameUrl})).text();document.documentElement.setAttribute("onreset","var URL=window.URL;\\n"+js+"\\n${semaphore}");document.documentElement.dispatchEvent(new CustomEvent("reset"));document.documentElement.removeAttribute("onreset");console.log("[Origin] Game injected via onreset")}catch(e){console.error("[Origin] Failed to inject game:",e)}})();<\/script>`
+
       html = html.replace(
-        /(<script[^>]*(?:game\.min\.js|assets\/game\.min)[^>]*?)(\s+onload\s*=\s*"[^"]*")([^>]*>)/gi,
-        "$1$3"
-      )
-      html = html.replace(
-        /(<script[^>]*(?:game\.min\.js|assets\/game\.min)[^>]*?)(\s+onload\s*=\s*'[^']*')([^>]*>)/gi,
-        "$1$3"
+        /<script[^>]*code\.prodigygame\.com\/code\/[^"']*game\.min\.js[^>]*>\s*(<\/script>)?/gi,
+        inlineInjector
       )
 
-      console.log("[Origin] Rewriting document: integrity stripped + game.min.js URL replaced + onload stripped")
+      console.log("[Origin] Rewriting document: integrity stripped + game script replaced with fetch+onreset injector")
 
       document.open()
       document.write(html)

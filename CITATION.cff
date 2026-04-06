@@ -1,9 +1,10 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 authors:
-- family-names: "ProdigyPXP"
-  given-names: ""
-title: "ProdigyMathGameHacking"
-version: 4.0.0
-date-released: 2026-04-05
+  - family-names: "Fedorov"
+    given-names: "Alexey"
+    alias: "alexey-max-fedorov"
+title: "Prodigy Origin"
+version: 3.1.0
+license: MPL-2.0
 url: "https://github.com/ProdigyPXP/ProdigyMathGameHacking"

@@ -59,16 +59,16 @@ function IndexPopup() {
   const [saved, setSaved] = useState(false)
 
   useEffect(() => {
-    chrome.storage.local.get(["phexGameUrl", "phexGuiUrl"], (result) => {
-      setGameUrl(result.phexGameUrl ?? DEFAULTS.gameUrl)
-      setGuiUrl(result.phexGuiUrl ?? DEFAULTS.guiUrl)
+    chrome.storage.local.get(["originGameUrl", "originGuiUrl"], (result) => {
+      setGameUrl(result.originGameUrl ?? DEFAULTS.gameUrl)
+      setGuiUrl(result.originGuiUrl ?? DEFAULTS.guiUrl)
     })
   }, [])
 
   function save() {
     chrome.storage.local.set({
-      phexGameUrl: gameUrl,
-      phexGuiUrl: guiUrl
+      originGameUrl: gameUrl,
+      originGuiUrl: guiUrl
     }, () => {
       setSaved(true)
       setTimeout(() => setSaved(false), 2000)
@@ -78,16 +78,16 @@ function IndexPopup() {
   function reset() {
     setGameUrl(DEFAULTS.gameUrl)
     setGuiUrl(DEFAULTS.guiUrl)
-    chrome.storage.local.remove(["phexGameUrl", "phexGuiUrl"])
+    chrome.storage.local.remove(["originGameUrl", "originGuiUrl"])
     setSaved(true)
     setTimeout(() => setSaved(false), 2000)
   }
 
   return (
     <main style={cardStyle}>
-      <h1 style={{ margin: 0, fontSize: 22 }}>PHEx</h1>
+      <h1 style={{ margin: 0, fontSize: 22 }}>Prodigy Origin</h1>
       <p style={{ marginTop: 6, marginBottom: 0, lineHeight: 1.4, fontSize: 13 }}>
-        Patched game + cheatGUI injection for Prodigy.
+        Mod loader and game enhancements for Prodigy.
       </p>
 
       <label style={labelStyle}>
@@ -96,12 +96,12 @@ function IndexPopup() {
           style={inputStyle}
           value={gameUrl}
           onChange={(e) => setGameUrl(e.target.value)}
-          placeholder="(default: GitHub P-NP patched branch)"
+          placeholder="(default: GitHub patched branch)"
         />
       </label>
 
       <label style={labelStyle}>
-        CheatGUI bundle URL
+        Mod bundle URL
         <input
           style={inputStyle}
           value={guiUrl}

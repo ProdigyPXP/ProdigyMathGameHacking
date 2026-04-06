@@ -8,26 +8,26 @@ export const config: PlasmoCSConfig = {
 
 declare global {
   interface Window {
-    __PHEX_INJECTED__?: boolean
-    __PHEX_REWRITTEN__?: boolean
-    __PHEX_GAME_URL__?: string
-    __PHEX_GUI_URL__?: string
+    __ORIGIN_INJECTED__?: boolean
+    __ORIGIN_REWRITTEN__?: boolean
+    __ORIGIN_GAME_URL__?: string
+    __ORIGIN_GUI_URL__?: string
   }
 }
 
 /**
- * PHEx Content Script — SRI Bypass via Document Rewrite + Direct URL Replacement
+ * Prodigy Origin Content Script — SRI Bypass via Document Rewrite + Direct URL Replacement
  *
- * The bridge script (ISOLATED world) sets data-phex-game-url synchronously
+ * The bridge script (ISOLATED world) sets data-origin-game-url synchronously
  * with the default remote GitHub URL for the patched game, then asynchronously
  * reads
- * chrome.storage.local for custom overrides and sets data-phex-ready="1"
+ * chrome.storage.local for custom overrides and sets data-origin-ready="1"
  * when done.
  *
  * This script (MAIN world):
  * - Immediately sets up prototype overrides and appendChild interceptors
  *   (Phase 2-4) — these don't need the URL upfront, they read it lazily
- * - Waits for data-phex-ready before running the document rewrite (Phase 1)
+ * - Waits for data-origin-ready before running the document rewrite (Phase 1)
  *   so custom URLs from storage are available
  * - DNR blocks the original game.min.js at the network level, so the brief
  *   wait for storage is safe
@@ -79,14 +79,14 @@ for (const Proto of [HTMLScriptElement.prototype, HTMLLinkElement.prototype]) {
 function isGameScript(node: Node): node is HTMLScriptElement {
   if (!(node instanceof HTMLScriptElement)) return false
   const src = node.src || ""
-  return src.includes("game.min.js") && !origGetAttribute.call(node, "data-phex")
+  return src.includes("game.min.js") && !origGetAttribute.call(node, "data-origin")
 }
 
 function createCleanGameScript(original: HTMLScriptElement): HTMLScriptElement {
-  const extensionUrl = window.__PHEX_GAME_URL__
+  const extensionUrl = window.__ORIGIN_GAME_URL__
   const clean = origCreateElement.call(document, "script") as HTMLScriptElement
   lockIntegrity(clean)
-  origSetAttribute.call(clean, "data-phex", "1")
+  origSetAttribute.call(clean, "data-origin", "1")
 
   clean.src = extensionUrl || original.src
 
@@ -97,7 +97,7 @@ function createCleanGameScript(original: HTMLScriptElement): HTMLScriptElement {
   if (original.type) clean.type = original.type
   if (original.crossOrigin) clean.crossOrigin = original.crossOrigin
 
-  console.log(`[PHEx] Replaced game.min.js with extension URL: ${clean.src}`)
+  console.log(`[Origin] Replaced game.min.js with extension URL: ${clean.src}`)
   return clean
 }
 
@@ -158,30 +158,30 @@ const integrityObserver = new MutationObserver((mutations) => {
 // ─── Phase 1: Document Rewrite (runs after bridge signals ready) ───
 
 function readUrlsFromBridge(): void {
-  const url = document.documentElement?.getAttribute("data-phex-game-url")
+  const url = document.documentElement?.getAttribute("data-origin-game-url")
   if (url) {
-    window.__PHEX_GAME_URL__ = url
-    console.log("[PHEx] Extension game URL:", url)
+    window.__ORIGIN_GAME_URL__ = url
+    console.log("[Origin] Extension game URL:", url)
   }
-  const guiUrl = document.documentElement?.getAttribute("data-phex-gui-url")
+  const guiUrl = document.documentElement?.getAttribute("data-origin-gui-url")
   if (guiUrl) {
-    window.__PHEX_GUI_URL__ = guiUrl
-    console.log("[PHEx] Custom CheatGUI URL:", guiUrl)
+    window.__ORIGIN_GUI_URL__ = guiUrl
+    console.log("[Origin] Custom mod bundle URL:", guiUrl)
   }
 }
 
 function rewriteDocument(): void {
-  if (window.__PHEX_REWRITTEN__) return
-  window.__PHEX_REWRITTEN__ = true
+  if (window.__ORIGIN_REWRITTEN__) return
+  window.__ORIGIN_REWRITTEN__ = true
 
   if (!location.pathname.startsWith("/load") && !location.search.includes("launcher=true")) {
-    console.log("[PHEx] Not on load page, skipping document rewrite")
+    console.log("[Origin] Not on load page, skipping document rewrite")
     return
   }
 
-  const extensionGameUrl = window.__PHEX_GAME_URL__
+  const extensionGameUrl = window.__ORIGIN_GAME_URL__
   if (!extensionGameUrl) {
-    console.warn("[PHEx] No extension game URL available, cannot rewrite")
+    console.warn("[Origin] No extension game URL available, cannot rewrite")
     return
   }
 
@@ -203,11 +203,11 @@ function rewriteDocument(): void {
 
       html = html.replace(
         /<link[^>]*rel=["']preload["'][^>]*game\.min\.js[^>]*>/gi,
-        "<!-- PHEx: preload removed -->"
+        "<!-- Origin: preload removed -->"
       )
       html = html.replace(
         /<link[^>]*game\.min\.js[^>]*rel=["']preload["'][^>]*>/gi,
-        "<!-- PHEx: preload removed -->"
+        "<!-- Origin: preload removed -->"
       )
 
       html = html.replace(
@@ -219,23 +219,23 @@ function rewriteDocument(): void {
         "$1$3"
       )
 
-      console.log("[PHEx] Rewriting document: integrity stripped + game.min.js URL replaced + onload stripped")
+      console.log("[Origin] Rewriting document: integrity stripped + game.min.js URL replaced + onload stripped")
 
       document.open()
       document.write(html)
       document.close()
 
-      console.log("[PHEx] Document rewrite complete")
+      console.log("[Origin] Document rewrite complete")
     }
   } catch (e) {
-    console.warn("[PHEx] Document rewrite failed:", e)
+    console.warn("[Origin] Document rewrite failed:", e)
   }
 }
 
 // ─── Init ───
 ;(function main() {
-  if (window.__PHEX_INJECTED__) return
-  window.__PHEX_INJECTED__ = true
+  if (window.__ORIGIN_INJECTED__) return
+  window.__ORIGIN_INJECTED__ = true
 
   // Start integrity observer immediately
   const root = document.documentElement || document
@@ -252,10 +252,10 @@ function rewriteDocument(): void {
   }
 
   // Check if bridge already set the ready signal (sync default URL case)
-  if (document.documentElement?.getAttribute("data-phex-ready")) {
+  if (document.documentElement?.getAttribute("data-origin-ready")) {
     readUrlsFromBridge()
     rewriteDocument()
-    console.log("[PHEx] Content script loaded — document rewrite + direct URL replacement active")
+    console.log("[Origin] Content script loaded — document rewrite + direct URL replacement active")
     return
   }
 
@@ -263,32 +263,32 @@ function rewriteDocument(): void {
   // Use MutationObserver on attributes — yields the event loop so the
   // ISOLATED world's storage callback can fire and set the attributes
   const bridgeObserver = new MutationObserver(() => {
-    if (document.documentElement?.getAttribute("data-phex-ready")) {
+    if (document.documentElement?.getAttribute("data-origin-ready")) {
       bridgeObserver.disconnect()
       readUrlsFromBridge()
       rewriteDocument()
-      console.log("[PHEx] Content script loaded — document rewrite + direct URL replacement active (async)")
+      console.log("[Origin] Content script loaded — document rewrite + direct URL replacement active (async)")
     }
   })
   bridgeObserver.observe(document.documentElement, {
     attributes: true,
-    attributeFilter: ["data-phex-ready"]
+    attributeFilter: ["data-origin-ready"]
   })
 
   // Safety timeout: if ready signal never comes, fall back to default URL
   setTimeout(() => {
-    if (!window.__PHEX_GAME_URL__) {
+    if (!window.__ORIGIN_GAME_URL__) {
       bridgeObserver.disconnect()
       // Read whatever is available (sync default URL at minimum)
       readUrlsFromBridge()
-      if (!window.__PHEX_GAME_URL__) {
-        console.warn("[PHEx] Bridge never signaled ready, no URL available")
+      if (!window.__ORIGIN_GAME_URL__) {
+        console.warn("[Origin] Bridge never signaled ready, no URL available")
         return
       }
-      console.log("[PHEx] Bridge timeout — using fallback URL")
+      console.log("[Origin] Bridge timeout — using fallback URL")
       rewriteDocument()
     }
   }, 500)
 
-  console.log("[PHEx] Content script loaded — waiting for bridge ready signal")
+  console.log("[Origin] Content script loaded — waiting for bridge ready signal")
 })()

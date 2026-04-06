@@ -1,34 +1,10 @@
-<h1 align="center"><a href="/.github/ANNOUNCEMENT.md">Hacks are being shut down. Thanks for everything.</a></h1>
+# Quick Start
 
-<h2 align="center"><a href="https://discord.gg/2qzTbdXSg9">Our Discord server: discord.gg/2qzTbdXSg9</a></h1>
+1. Install the Prodigy Origin extension ([Chrome](../manual/CHROME.md) | [Firefox](../manual/FIREFOX.md) | [Edge](../manual/EDGE.md) | [Brave](../manual/BRAVE.md) | [Opera](../manual/OPERA.md)).
+2. Go to [math.prodigygame.com](https://math.prodigygame.com/).
+3. Log in — the Prodigy Origin mod menu will appear in-game.
+4. Press **SHIFT** to show/hide the mod menu.
 
-# Quickstart
+## Need help?
 
-## Google Chrome
-- Using Webstore: See [webstores/CHROME.md](../webstores/CHROME.md)
-- Manual Install: See [manual/CHROME.md](../manual/CHROME.md)
-
-<br>
-
-
-## Brave Browser
-- Using Webstore: See [webstores/BRAVE.md](../webstores/BRAVE.md)
-- Manual Install: See [manual/BRAVE.md](../manual/BRAVE.md)
-
-<br>
-
-## Mozilla Firefox
-- Using Webstore: See [webstores/FIREFOX.md](../webstores/FIREFOX.md)
-- Manual Install: See [manual/FIREFOX.md](../manual/FIREFOX.md)
-
-<br>
-
-## Microsoft Edge
-- Using Webstore: See [webstores/EDGE.md](../webstores/EDGE.md)
-- Manual Install: See [manual/EDGE.md](../manual/EDGE.md)
-
-<br>
-
-## Opera, Opera GX, Opera Crypto Browser
-- Using Webstore: See [webstores/OPERA.md](../webstores/OPERA.md)
-- Manual Install: See [manual/OPERA.md](../manual/OPERA.md)
+Join the [Discord server](https://dsc.gg/ProdigyPXP).

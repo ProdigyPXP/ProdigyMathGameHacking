@@ -1,4 +1,4 @@
-// Background service worker for PHEx
+// Background service worker for Prodigy Origin
 // Registers declarativeNetRequest rules for blocking/modifying requests
 
 const RULES: chrome.declarativeNetRequest.Rule[] = [
@@ -47,7 +47,7 @@ const RULES: chrome.declarativeNetRequest.Rule[] = [
     action: {
       type: chrome.declarativeNetRequest.RuleActionType.REDIRECT,
       redirect: {
-        url: "https://raw.githubusercontent.com/ProdigyPXP/ProdigyMathGameHacking/master/.github/ppnp.png"
+        url: "https://raw.githubusercontent.com/ProdigyPXP/ProdigyMathGameHacking/master/.github/origin-bg.png"
       }
     },
     condition: {
@@ -67,7 +67,7 @@ const RULES: chrome.declarativeNetRequest.Rule[] = [
     action: {
       type: chrome.declarativeNetRequest.RuleActionType.REDIRECT,
       redirect: {
-        url: "https://raw.githubusercontent.com/ProdigyPXP/ProdigyMathGameHacking/master/.github/ProdigyLoaderPNP.png"
+        url: "https://raw.githubusercontent.com/ProdigyPXP/ProdigyMathGameHacking/master/.github/origin-logo.png"
       }
     },
     condition: {
@@ -93,7 +93,7 @@ chrome.runtime.onInstalled.addListener(async () => {
     addRules: RULES
   })
 
-  console.log("[PHEx] DeclarativeNetRequest rules registered successfully")
+  console.log("[Origin] DeclarativeNetRequest rules registered successfully")
 })
 
 export {}

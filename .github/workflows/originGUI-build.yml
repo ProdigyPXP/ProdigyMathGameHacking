@@ -1,0 +1,44 @@
+name: Autobuild originGUI
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'originGUI/src/**'
+      - 'originGUI/build.mjs'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install pnpm
+      uses: pnpm/action-setup@v4
+      with:
+        version: 9
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+
+    - name: Install dependencies
+      run: cd originGUI && pnpm install
+
+    - name: Build originGUI
+      run: cd originGUI && pnpm build
+
+    - name: Commit built bundle
+      run: |
+        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git config --global user.name "github-actions[bot]"
+        git add originGUI/dist/bundle.js
+        git commit --allow-empty -s -m "AutoBuild originGUI" || echo "No changes"
+
+    - name: Push changes to GitHub
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }}

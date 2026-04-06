@@ -19,8 +19,8 @@
   },
   "version": "3.1.0",
   "author": "ProdigyPXP",
-  "name": "Prodigy Hacking Extension | PHEx",
-  "description": "Free and open source hacks for Prodigy Math Game",
+  "name": "Prodigy Origin | Prodigy Mod Hack",
+  "description": "The ultimate open source mod loader for Prodigy Math Game",
   "background": {
     "service_worker": "./static/background/index.ts"
   },
@@ -35,7 +35,7 @@
         "https://math.prodigygame.com/*"
       ],
       "js": [
-        "../contents/phex-bridge.ts"
+        "../contents/origin-bridge.ts"
       ],
       "run_at": "document_start"
     }

@@ -2,18 +2,15 @@ name: Better Dependabot
 
 on:
   schedule:
-    - cron: "0 0 * * *" # Supposedly at the end of every day.
+    - cron: "0 0 * * *"
   workflow_dispatch:
-    
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
-        node-version: [16.x]
-    
+        node-version: [20.x]
     steps:
     - uses: actions/checkout@v4
 
@@ -23,22 +20,22 @@ jobs:
         node-version: ${{ matrix.node-version }}
 
     - name: Install pnpm
-      uses: pnpm/action-setup@v3.0.0
+      uses: pnpm/action-setup@v4
       with:
-        version: 7
+        version: 9
 
-    - name: Update cheatGUI dependencies
+    - name: Update originGUI dependencies
       run: |
-        cd ./cheatGUI/
+        cd ./originGUI/
         pnpm update
     - name: Update typings dependencies
       run: |
         cd ./typings/
         pnpm update
-    - name: Update PHEx dependencies
+    - name: Update extension dependencies
       run: |
-        cd ./PHEx/
-        pnpm update        
+        cd ./extension/
+        pnpm update
     - name: Commit with git
       run: |
         git pull
@@ -50,4 +47,4 @@ jobs:
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: ${{ github.ref }}        
+        branch: ${{ github.ref }}

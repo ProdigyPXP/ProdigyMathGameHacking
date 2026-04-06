@@ -1,187 +1,62 @@
-<h1 align="center"><a href="/.github/ANNOUNCEMENT.md">Hacks are being shut down. Thanks for everything.</a></h1>
+# Prodigy Origin
 
-<h2 align="center"><a href="https://discord.gg/2qzTbdXSg9">Our Discord server: discord.gg/2qzTbdXSg9</a></h2>
+**Free and open source mods for [Prodigy Math Game](https://prodigygame.com).**
 
+Prodigy Origin enhances your Prodigy Math Game experience with community-built mods, delivered through a simple browser extension.
 
-<h1 align="center">
-	<a href="../../tree/master/meta/wiki/QUICKSTART.md">
-		<img align="center"
-			width="175"
-			alt="Prodigy Math Game Hacking"
-			src="/.github/PTB.png?raw=true">
-	</a>
-</h1>
+> **Looking for Prodigy hacks?** Prodigy Origin is the ultimate open source mod loader and hack tool for Prodigy Math Game.
 
+## Install
 
-  
-		
-<p align="center">
-	<strong>
-		<a href="https://prodigypxp.com">Website</a>
-		•
-		<a href="https://discord.gg/2qzTbdXSg9">Discord</a>
-		•
-		<a href="https://github.com/ProdigyPXP/ProdigyMathGameHacking/blob/master/meta/wiki/QUICKSTART.md">Installation</a>
-		•
-		<a href="https://www.youtube.com/channel/UC9Q8ocvTML4jKYWbNbQHrGw">YouTube</a>
-	</strong>
-</p>
+| Browser | Link |
+|---------|------|
+| Chrome | Chrome Web Store (coming soon) |
+| Firefox | Firefox Add-ons (coming soon) |
+| Edge | Edge Add-ons (coming soon) |
+| Manual | [Manual install guides](meta/manual/) |
 
-	
-<a href="https://dsc.gg/2qzTbdXSg9">
-	<img alt="Discord Members" src="https://img.shields.io/discord/962479557439549450.svg?color=7289da&label=Discord&logo=discord&style=flat-square">
-</a>
+## Features
 
-<a href="../../pulse">
-	<img src="https://img.shields.io/github/commit-activity/m/ProdigyPXP/ProdigyMathGameHacking?style=flat-square">
-</a>
-
-<p/>
-
-
-
-<!-- 
-
-## [How to hack Prodigy](meta/wiki/QUICKSTART.md)
-
-Read our [Quickstart Guide](meta/wiki/QUICKSTART.md).
-
-
-
-<h4 align="center" id="Webstores">
-
-<a href="https://addons.mozilla.org/en-US/firefox/addon/phex"><img src="https://user-images.githubusercontent.com/585534/107280546-7b9b2a00-6a26-11eb-8f9f-f95932f4bfec.png" alt="Get PHEx for Mozilla Firefox"></a>
-<a href="https://chrome.google.com/webstore/detail/prodigy-hacking-extension/nmipcbdicnmjoifanpdcjdmifeioglkm"><img src="https://user-images.githubusercontent.com/585534/107280622-91a8ea80-6a26-11eb-8d07-77c548b28665.png" alt="Get PHEx for Google Chrome"></img></a>
-<a href="https://microsoftedge.microsoft.com/addons/detail/prodigy-hacking-extension/ekoakjipfmjpmlkldiikhoigaflfkjej"><img src="https://user-images.githubusercontent.com/585534/107280673-a5ece780-6a26-11eb-9cc7-9fa9f9f81180.png" alt="Get PHEx for Microsoft Edge"></a>
-<a href="/meta/wiki/QUICKSTART.md"><img src="https://user-images.githubusercontent.com/69060894/184510500-c0c005f3-023a-4961-bfad-0d0faf055220.png" alt="Manual Install PHEx"></img></a>
-
-
--->
-
-
-</h4>
-
-## Info
-
-
-<details>
-<summary><b>This is a fork.</b></summary><br>
-
-While the repository isn't <i>techinally</i> a fork, we have made this repository to continue development of
-<b><a href="https://github.com/Prodigy-Hacking/ProdigyMathGameHacking">Prodigy-Hacking/ProdigyMathGameHacking</a></b>,
-because that repository is archived. Also, that repository was privated at the time of us making this repostitory, so we could not reference it
-at the time of creating this repo.
-<br></details>
-
-
-<details>
-<summary><b>We aren't evil.</b></summary><br>
-<p>We aren't evil. Everything is open source, forever free, and without ads.
-
-We're not trying to break the game because we're evil. We wanted to help Prodigy become more secure, but they've ignored our emails and our requests to talk. They've even gone as far as to ban a user from their official Zendesk.
-
-Also they DMCA'd the original hacks, so for that they can go to hell.
-
-Because of that, we're publicly showing hacks! To be honest, it's just fun ;)
-
-All of our hacks are open source, and free. No paywalls, no ads, and no viruses.</p>
-
-<br></details>
-
-
-<p/>
-
-
-<details>
-<summary><b>Can you hack for me?</b></summary><br>
-<p>We're not going to hack your account for you for security reasons.
-Giving someone else your credentials allows them to mess around on your account.
-Even worse, anyone with your credentials could potentially log into your actual email.</p>
-<br></details>
-
-
-<p/>
-
-
-<details>
-<summary><b>How do I know you won't steal my account?</b></summary><br>
-<p>Of course, with trusting any hacks, comes the risk that we're actually bad actors that will steal all your info.
-It's impossible to prove with absolute certainty to anyone reading this that we aren't bad faith, but we open source our things.
-</p>
-
-<b>We do not want your account.</b>
-
-<p><i>But what if you steal my personal info?</i>
-We do not want your personal info. Please do not share it. Even if we wanted to, there's not much we could do with it. "Wow, John Doe is in 5th grade and has mastered fractions!"</p>
-<br></details>
-
-
-<p/>
-
-
-<details>
-<summary><b>How do I know what code is running in the hacks?</b></summary><br>
-<p>Our code is open source, and you're always free to read any of it. If you have trouble understanding what a certain thing does, feel free to ask any of the administrators on our Discord.</p>
-<br></details>
-
-
-<p/>
-
-
-<details>
-<summary><b>Legal</b></summary><br>
-<p>If you have any legal problems to us, please email <a href = "mailto:prodigypxp@gmail.com">ProdigyPXP@gmail.com</a></p>
-<br></details>
-
-<br>
-
-
-
-
-## Disclaimer
-
-We recommend that you use an alternate Prodigy account when using our Prodigy hacks.
-Using hacks on your main account could get it hacker-tagged, reset, banned, or most likely broken.
-
-We are not liable for any damage to your accounts, see our [license](LICENSE.txt) for more information.
-
-**All hacks are licensed under the Mozilla Public License (MPL) V2.0, unless stated otherwise with a separate license.**
-
-<br>
-
-
-
-## [The Team](meta/CONTRIBUTORS.md)
-
-ProdigyMathGameHacking was made by [all the people who have contributed to it](meta/CONTRIBUTORS.md).
-
-<br>
-
-
-
-## Development
-This organization and repo is done for. We're not maintaining anything anymore, since we've shut down. If you're interested in developing with us, join us at [@ProdigyPXP](https://github.com/ProdigyPXP)- where we'll make new software, and perhaps one day new Prodigy hacks.
-
-<!--
-You can find our in-development code on [different branches of this repository](https://github.com/ProdigyPXP/ProdigyMathGameHacking/branches).
-
-If you're interested in simple beta testing, open the hacks as usual, scroll down to "Beta Testing", and you can find a bunch of beta/WIP hacks.
--->
-<br>
-
-
+- Blocks the original game code and loads a patched version with mods enabled
+- Removes Content Security Policy restrictions
+- Injects the **Prodigy Origin** mod menu into the game
+- Configurable custom game/mod bundle URLs via the extension popup
+- Custom login background and logo
 
 ## Components
-- [P-NP](https://github.com/ProdigyPXP/P-NP) - The serverside part of ProdigyPXP, the reason why we could modify the game code we loaded.
-- [ProdigyMathGameHacking](../..) - The ProdigyMathGameHacking Repository
-- [extension](extension/) - The Prodigy Hacking Extension, used to inject our modified game files into Prodigy.
-- [cheatGUI](cheatGUI/) - The cheat GUI, for user convenience, and it's pretty.
-- [docs](docs/) - Our documentation of Prodigy, used to find functions to build the hacks. However, it may be slightly outdated, since it's not maintained.
-- [meta](meta/) - Information on this repository.
-  
-<br>
-<hr>
 
-<h1 align="center">
-<a href = "https://dsc.gg/ProdigyPXP"><img src="https://readme-jokes.vercel.app/api" alt="Jokes Card" width=700/></a>
-	</h1>
+| Directory | Description |
+|-----------|-------------|
+| `extension/` | MV3 Chrome extension (Plasmo) — intercepts requests, injects mods |
+| `originGUI/` | In-game mod menu (esbuild) — TypeScript + SCSS |
+| `typings/` | Reverse-engineered TypeScript types for Prodigy game objects |
+| `meta/` | Documentation and install guides |
+
+## Development
+
+```bash
+# Install all workspace dependencies
+pnpm install
+
+# Build the mod menu
+cd originGUI && pnpm build
+
+# Build the extension
+cd extension && pnpm build
+
+# Dev mode (extension hot reload)
+cd extension && pnpm dev
+```
+
+Load the unpacked extension from `extension/build/chrome-mv3-dev/` in Chrome.
+
+Navigate to [math.prodigygame.com](https://math.prodigygame.com/) — press **SHIFT** to toggle the mod menu.
+
+## License
+
+[Mozilla Public License 2.0](LICENSE.txt)
+
+## Links
+
+- [Discord](https://dsc.gg/ProdigyPXP)
+- [GitHub](https://github.com/ProdigyPXP/ProdigyMathGameHacking)

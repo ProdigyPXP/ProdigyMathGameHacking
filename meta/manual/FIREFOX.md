@@ -1,17 +1,12 @@
-## How to hack Prodigy: Mozilla Firefox (Manual Install)
+# Manual Install — Mozilla Firefox
 
-<br>
+1. Download the latest Firefox build from the [Releases page](https://github.com/ProdigyPXP/ProdigyMathGameHacking/releases/latest).
+2. Open Firefox and go to `about:debugging#/runtime/this-firefox`.
+3. Click **Load Temporary Add-on** and select the downloaded `.xpi` or `manifest.json` file.
+4. Navigate to [math.prodigygame.com](https://math.prodigygame.com/) to verify the extension is working.
 
-1. Open **Firefox**.
-2. In Firefox, enter ``about:debugging#/runtime/this-firefox`` in the URL bar.
-4. Next to **Temporary Extensions**, you should see a button that says **Load Temporary Add-on...**.
-5. [Download PHEx.zip](https://github.com/ProdigyPXP/ProdigyMathGameHacking/releases/latest).
-6. Go back to the add-on debugging page and click **Load Temporary Add-on...**.
-7. Select `x.x.x-PHEx.zip`.
-8. You should see a new extension called `Prodigy Hacking Extension | PHEx` in your extensions.
-9. Go to [Prodigy](https://play.prodigygame.com) (``play.prodigygame.com``).
-10. Log in as usual to Prodigy. REMEMBER THAT WE STILL RECCOMMEND YOU TO LOG IN WITH A SECOND ACCOUNT TO PREVENT ACCEDENTALLY CORRUPTING YOUR MAIN ACCOUNT.
-11. Once you enter a world, wait 5-15 seconds.
-12. In the top left corner of your screen, you should see a dropdown arrow. Click the dropdown arrow to open the hacks.
-13. Congrats, you've successfully achived hacking in the Prodigy Math Game.
-14. Join [our discord server](https://dsc.gg/ProdigyPXP) for more!
+> **Note:** Temporary add-ons are removed when Firefox closes. For permanent installation, use Firefox Add-ons (coming soon).
+
+## Need help?
+
+Join the [Discord server](https://dsc.gg/ProdigyPXP).

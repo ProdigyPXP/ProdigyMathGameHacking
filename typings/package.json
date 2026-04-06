@@ -3,7 +3,7 @@
 	"version": "3.0.1",
 	"description": "Type declarations for Prodigy, the math game.",
 	"license": "MPL-2.0",
-	"author": "ProdigyPXP",
+	"author": "alexey-max-fedorov",
 	"scripts": {},
 	"dependencies": {
 		"typescript": "^5.0.2"

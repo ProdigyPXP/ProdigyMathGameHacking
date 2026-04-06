@@ -1,8 +1,8 @@
 {
-  "name": "phex-extension",
+  "name": "prodigy-origin-extension",
   "version": "3.1.0",
   "private": true,
-  "description": "Plasmo-based PHEx browser extension",
+  "description": "Plasmo-based Prodigy Origin browser extension",
   "scripts": {
     "dev": "plasmo dev",
     "dev:firefox": "plasmo dev --target=firefox-mv3",
@@ -24,8 +24,8 @@
     "typescript": "^6.0.2"
   },
   "manifest": {
-    "name": "Prodigy Hacking Extension | PHEx",
-    "description": "Free and open source hacks for Prodigy Math Game",
+    "name": "Prodigy Origin | Prodigy Mod Hack",
+    "description": "The ultimate open source mod loader for Prodigy Math Game",
     "author": "ProdigyPXP",
     "permissions": [
       "declarativeNetRequest",

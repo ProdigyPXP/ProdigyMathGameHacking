@@ -1,6 +1,5 @@
-## How to hack Prodigy: Opera, Opera GX, or Opera Cryto Browser (Opera Addons Store)
+# Opera Add-ons — Prodigy Origin
 
-<br>
+Opera supports Chrome extensions. Install from the Chrome Web Store once available.
 
-### Sorry, but PHEx is currently not on the Opera Addons store.
-### [You can instead manually install PHEx on an Opera browser](../manual/OPERA.md)
+In the meantime, use the [manual install guide](../manual/OPERA.md).

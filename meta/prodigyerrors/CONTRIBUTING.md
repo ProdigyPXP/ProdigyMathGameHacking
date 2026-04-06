@@ -1,14 +1,3 @@
-## How to contribute more Prodigy errors.
+# Contributing Prodigy Error Documentation
 
-If you know an error and it's cause:
-- [Post about it on our forum.](https://github.com/ProdigyPXP/ProdigyMathGameHacking/discussions/categories/forum)
-
-<br>
-
-If you know the error and trigger, and what exactly is happening (Technical knowledge and details):
-- [Post about it on our developer forum.](https://github.com/ProdigyPXP/ProdigyMathGameHacking/discussions/categories/developer-forum)
-
--------
-
-If you know the error code and trigger, what exactly is happening (Technical knowledge and details), and you also know exactly how to format your addition:
-- [Open a pull request](https://github.com/ProdigyPXP/ProdigyMathGameHacking/pulls).
+Found a Prodigy error code not documented here? Open an issue or PR at [ProdigyPXP/ProdigyMathGameHacking](https://github.com/ProdigyPXP/ProdigyMathGameHacking).

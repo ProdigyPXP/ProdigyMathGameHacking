@@ -6,7 +6,6 @@ import "./style.scss"; // Import SCSS style
 import { _ } from "./utils/util"; // Import Prodigy typings
 import { statusMessage } from "./utils/status"; // Import status message
 import Swal from "sweetalert2"; // Import Swal
-import { License, NoLicense } from "./utils/swal";
 
 
 export const menu = document.createElement("div"); // Create mod menu element
@@ -178,41 +177,5 @@ if (process.env.NODE_ENV === "development") {
 
 
 
-// LICENSE POPUPS
-(async () => {
-
-
-
-        if (!(await License.fire("Prodigy Origin", `
-            <p>
-            <a href="https://github.com/ProdigyPXP/ProdigyOrigin/blob/master/README.md">This is free and open-source software</a>.
-            If you paid for this or accessed this behind a paywall/AdFly link, demand a refund. If you sell this software, or otherwise make a commercial advantage from it, you are violating
-            <a href = "https://github.com/ProdigyPXP/ProdigyOrigin/blob/master/LICENSE.txt">our license</a>.
-            </p>
-        `)).value) {
-
-            if (!(await NoLicense.fire("Prodigy Origin License", `
-                <p>
-                <strong>You need to agree to our license to use Prodigy Origin. If you changed your mind and now agree to our license, reload Prodigy.</strong>
-                </p>
-            `)).value) {
-
-                // Play Prodigy without hacks
-                document.getElementById("origin-menu")?.remove(); // Remove any existing menu if present
-                document.getElementById("origin-toggler")?.remove(); // Remove any existing menu togglers if present
-
-            } else {
-
-                // Reload Prodigy
-                location.reload();
-            }
-
-
-        } else {
-
-
-            // Display status message.
-            await statusMessage();
-        }
-
-})();
+// Display status message.
+statusMessage();

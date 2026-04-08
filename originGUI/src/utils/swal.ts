@@ -48,25 +48,6 @@ export const Info = Swal.mixin({
 // Info popup
 
 
-// License popup
-export const License = Swal.mixin({
-	icon: "info",
-	showCancelButton: true,
-	toast: false,
-	confirmButtonText: "Agree",
-	cancelButtonText: "Disagree"
-});
-
-
-// Disagreed to license popup
-export const NoLicense = Swal.mixin({
-	icon: "error",
-	showCancelButton: true,
-	toast: false,
-	confirmButtonText: "Reload",
-	cancelButtonText: "Play without hacks"
-});
-// Disagreed to license popup
 
 // @ts-expect-error allow accessing swal from devtools
 window.Swal = Swal;

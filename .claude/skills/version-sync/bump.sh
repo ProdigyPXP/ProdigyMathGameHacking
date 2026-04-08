@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # version-sync: bump the top-level "version" field in all Prodigy Origin
-# package.json files AND the VERSION constant in P-NP/src/constants.ts.
+# package.json files, the version: in CITATION.cff, AND the VERSION
+# constant in P-NP/src/constants.ts.
 set -euo pipefail
 
 TARGET="${1:-}"
@@ -21,6 +22,7 @@ PKG_FILES=(
   "/home/alex/P-NP/package.json"
 )
 
+CITATION_FILE="/home/alex/ProdigyMathGameHacking/CITATION.cff"
 CONSTS_FILE="/home/alex/P-NP/src/constants.ts"
 
 for f in "${PKG_FILES[@]}"; do
@@ -46,9 +48,31 @@ with open(path, 'w') as fh:
   echo "  $f: $old → $TARGET"
 done
 
+if [[ ! -f "$CITATION_FILE" ]]; then
+  echo "error: missing $CITATION_FILE" >&2
+  exit 4
+fi
+
+old_cff=$(grep -oE '^version: .+' "$CITATION_FILE" | sed -E 's/^version: (.+)$/\1/')
+python3 -c "
+import re
+with open('$CITATION_FILE') as fh:
+    content = fh.read()
+content = re.sub(
+    r'^version: .+$',
+    'version: $TARGET',
+    content,
+    count=1,
+    flags=re.MULTILINE
+)
+with open('$CITATION_FILE', 'w') as fh:
+    fh.write(content)
+"
+echo "  $CITATION_FILE: $old_cff → $TARGET"
+
 if [[ ! -f "$CONSTS_FILE" ]]; then
   echo "error: missing $CONSTS_FILE" >&2
-  exit 4
+  exit 5
 fi
 
 old_const=$(grep -oE 'export const VERSION = "[^"]+"' "$CONSTS_FILE" | sed -E 's/.*"([^"]+)".*/\1/')
@@ -67,6 +91,6 @@ with open('$CONSTS_FILE', 'w') as fh:
 echo "  $CONSTS_FILE: $old_const → $TARGET"
 
 echo ""
-echo "✓ bumped ${#PKG_FILES[@]} package.json files + 1 VERSION constant to $TARGET"
+echo "✓ bumped ${#PKG_FILES[@]} package.json files + CITATION.cff + 1 VERSION constant to $TARGET"
 echo "  next: review with 'git diff', then commit in each repo."
 echo "  note: P-NP requires 'pnpm build && node dist/patch.js ./dist' to bake into game.min.js"

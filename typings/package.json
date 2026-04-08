@@ -11,10 +11,10 @@
 	"keywords": [],
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/ProdigyPXP/ProdigyMathGameHacking.git#master"
+		"url": "git+https://github.com/ProdigyPXP/ProdigyOrigin.git#master"
 	},
 	"bugs": {
-		"url": "https://github.com/ProdigyPXP/ProdigyMathGameHacking/issues"
+		"url": "https://github.com/ProdigyPXP/ProdigyOrigin/issues"
 	},
-	"homepage": "https://github.com/ProdigyPXP/ProdigyMathGameHacking/tree/master/typings"
+	"homepage": "https://github.com/ProdigyPXP/ProdigyOrigin/tree/master/typings"
 }

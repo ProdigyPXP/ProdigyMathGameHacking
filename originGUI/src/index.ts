@@ -185,9 +185,9 @@ if (process.env.NODE_ENV === "development") {
 
         if (!(await License.fire("Prodigy Origin", `
             <p>
-            <a href="https://github.com/ProdigyPXP/ProdigyMathGameHacking/blob/master/README.md">This is free and open-source software</a>.
+            <a href="https://github.com/ProdigyPXP/ProdigyOrigin/blob/master/README.md">This is free and open-source software</a>.
             If you paid for this or accessed this behind a paywall/AdFly link, demand a refund. If you sell this software, or otherwise make a commercial advantage from it, you are violating
-            <a href = "https://github.com/ProdigyPXP/ProdigyMathGameHacking/blob/master/LICENSE.txt">our license</a>.
+            <a href = "https://github.com/ProdigyPXP/ProdigyOrigin/blob/master/LICENSE.txt">our license</a>.
             </p>
         `)).value) {
 

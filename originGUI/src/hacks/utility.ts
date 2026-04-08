@@ -110,7 +110,7 @@ new Hack(category.utility, "Update menu", "Updates menu to the latest version wi
     document.getElementById("origin-menu")?.remove();
     document.getElementById("origin-toggler")?.remove();
     (async () => {
-        eval(await (await fetch(`https://raw.githubusercontent.com/ProdigyPXP/ProdigyMathGameHacking/master/originGUI/dist/bundle.js?updated=${Date.now()}`)).text()); // updated parameter is so browser ignores cached version
+        eval(await (await fetch(`https://raw.githubusercontent.com/ProdigyPXP/ProdigyOrigin/master/originGUI/dist/bundle.js?updated=${Date.now()}`)).text()); // updated parameter is so browser ignores cached version
     })();
     return Toast.fire("Updated!", "Mod menu was updated.", "success");
 });

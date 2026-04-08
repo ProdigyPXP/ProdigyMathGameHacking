@@ -7,7 +7,7 @@ import { Swal } from "../utils/swal";  // Import Swal
 export function statusMessage () {
 
 
-    fetch(`https://raw.githubusercontent.com/ProdigyPXP/ProdigyMathGameHacking/master/originGUI/statusmessage.json?updated=${Date.now()}`).then(response => response.json()).then(async data => {
+    fetch(`https://raw.githubusercontent.com/ProdigyPXP/ProdigyOrigin/master/originGUI/statusmessage.json?updated=${Date.now()}`).then(response => response.json()).then(async data => {
 
             const enabled = data.enabled;
 

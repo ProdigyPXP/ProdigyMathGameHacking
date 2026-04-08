@@ -21,7 +21,7 @@ import { PopupInterval } from "../utils/popupCloser";
 // Begin Switch Branch
 new Hack(category.beta, "Switch Branch", "Loads a different branch of Prodigy Origin for you.").setClick(async () => {
 
-    const branches_fetch : string = await (await fetch("https://api.github.com/repos/ProdigyPXP/ProdigyMathGameHacking/branches")).text()
+    const branches_fetch : string = await (await fetch("https://api.github.com/repos/ProdigyPXP/ProdigyOrigin/branches")).text()
     let branches : Map<string, string> = new Map();
 
     JSON.parse(branches_fetch).forEach((e : any) => {
@@ -37,7 +37,7 @@ new Hack(category.beta, "Switch Branch", "Loads a different branch of Prodigy Or
 
     if (!branch) return;
 
-    return await eval(await (await fetch(`https://raw.githubusercontent.com/ProdigyPXP/ProdigyMathGameHacking/${branch}/originGUI/dist/bundle.js`)).text());
+    return await eval(await (await fetch(`https://raw.githubusercontent.com/ProdigyPXP/ProdigyOrigin/${branch}/originGUI/dist/bundle.js`)).text());
 });
 
 

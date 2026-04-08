@@ -1,6 +1,6 @@
 # Manual Install — Brave
 
-1. Download the latest release from the [Releases page](https://github.com/ProdigyPXP/ProdigyMathGameHacking/releases/latest).
+1. Download the latest release from the [Releases page](https://github.com/ProdigyPXP/ProdigyOrigin/releases/latest).
 2. Extract the ZIP file.
 3. Open Brave and go to `brave://extensions/`.
 4. Enable **Developer Mode** (top right).

@@ -66,7 +66,7 @@ export const saveCharacter = () => {
 };
 
 /** The URL to the assets directory */
-export const assetURL = "https://raw.githubusercontent.com/ProdigyPXP/ProdigyMathGameHacking/master/originGUI/src/assets/";
+export const assetURL = "https://raw.githubusercontent.com/ProdigyPXP/ProdigyOrigin/master/originGUI/src/assets/";
 
 /** Gets the full URL of an asset */
 export const joinAsset = (asset: string) => `${assetURL}${asset}`;

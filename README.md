@@ -59,4 +59,4 @@ Navigate to [math.prodigygame.com](https://math.prodigygame.com/) — press **SH
 ## Links
 
 - [Discord](https://dsc.gg/ProdigyPXP)
-- [GitHub](https://github.com/ProdigyPXP/ProdigyMathGameHacking)
+- [GitHub](https://github.com/ProdigyPXP/ProdigyOrigin)

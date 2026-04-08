@@ -47,7 +47,7 @@ const RULES: chrome.declarativeNetRequest.Rule[] = [
     action: {
       type: chrome.declarativeNetRequest.RuleActionType.REDIRECT,
       redirect: {
-        url: "https://raw.githubusercontent.com/ProdigyPXP/ProdigyMathGameHacking/master/.github/origin-bg.png"
+        url: "https://raw.githubusercontent.com/ProdigyPXP/ProdigyOrigin/master/.github/origin-bg.png"
       }
     },
     condition: {
@@ -67,7 +67,7 @@ const RULES: chrome.declarativeNetRequest.Rule[] = [
     action: {
       type: chrome.declarativeNetRequest.RuleActionType.REDIRECT,
       redirect: {
-        url: "https://raw.githubusercontent.com/ProdigyPXP/ProdigyMathGameHacking/master/.github/origin-logo.png"
+        url: "https://raw.githubusercontent.com/ProdigyPXP/ProdigyOrigin/master/.github/origin-logo.png"
       }
     },
     condition: {

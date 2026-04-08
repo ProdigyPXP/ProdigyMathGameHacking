@@ -20,4 +20,4 @@ The extension fetches patched game files from `raw.githubusercontent.com` (GitHu
 
 ## Contact
 
-Open an issue at [github.com/ProdigyPXP/ProdigyMathGameHacking/issues](https://github.com/ProdigyPXP/ProdigyMathGameHacking/issues).
+Open an issue at [github.com/ProdigyPXP/ProdigyOrigin/issues](https://github.com/ProdigyPXP/ProdigyOrigin/issues).

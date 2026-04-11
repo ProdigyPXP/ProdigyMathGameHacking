@@ -60,6 +60,8 @@ pids
 # Extension build output
 extension/build/
 extension/.plasmo/cache/
+extension/firefox/build/
+extension/firefox/.plasmo/
 
 # MCP debug config
 .mcp.json

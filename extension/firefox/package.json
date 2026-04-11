@@ -1,0 +1,49 @@
+{
+  "name": "prodigy-origin-extension-firefox",
+  "version": "4.2.0",
+  "private": true,
+  "description": "Prodigy Origin — Firefox MV3 build",
+  "scripts": {
+    "dev": "plasmo dev --target=firefox-mv3",
+    "build": "plasmo build --target=firefox-mv3",
+    "package": "plasmo package --target=firefox-mv3",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "framer-motion": "^12.38.0",
+    "lucide-react": "^1.8.0",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
+    "tailwind-merge": "^3.5.0"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.1.40",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "plasmo": "^0.90.5",
+    "typescript": "^6.0.2"
+  },
+  "manifest": {
+    "name": "Prodigy Origin | Prodigy Mod Hack",
+    "description": "The ultimate open source mod loader for Prodigy Math Game",
+    "author": "ProdigyPXP",
+    "permissions": [
+      "declarativeNetRequest",
+      "storage"
+    ],
+    "host_permissions": [
+      "*://*.prodigygame.com/*",
+      "https://raw.githubusercontent.com/*"
+    ],
+    "browser_specific_settings": {
+      "gecko": {
+        "id": "phex@prodigypxp.com",
+        "strict_min_version": "142.0",
+        "data_collection_permissions": {
+          "required": ["none"]
+        }
+      }
+    }
+  }
+}

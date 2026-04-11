@@ -1,0 +1,269 @@
+@font-face {
+  font-family: "Playfair Display";
+  src: url("./assets/fonts/playfair-display-600.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("./assets/fonts/inter-latin.woff2") format("woff2");
+  font-weight: 400 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: #000000;
+  color: #ffffff;
+  font-family: "Inter", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.popup-root {
+  width: 380px;
+  min-height: 340px;
+  background-color: #000000;
+  color: #ffffff;
+  padding: 20px;
+}
+
+.popup-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.popup-logo {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+}
+
+.popup-title {
+  font-family: "Playfair Display", Georgia, serif;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 1;
+  margin: 0;
+  color: #ffffff;
+}
+
+.popup-eyebrow {
+  font-size: 11px;
+  color: #666;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  margin: 4px 0 0 0;
+}
+
+.divider-gold {
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(201, 168, 76, 0.4),
+    transparent
+  );
+  margin: 16px 0;
+}
+
+.divider-subtle {
+  height: 1px;
+  background-color: #1a1a1a;
+  margin: 16px 0;
+}
+
+.field {
+  display: block;
+  margin-bottom: 12px;
+}
+
+.field:last-child {
+  margin-bottom: 0;
+}
+
+.field-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: #a0a0a0;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.field-input {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 12px;
+  background-color: #111111;
+  border: 1px solid #1a1a1a;
+  border-radius: 6px;
+  color: #ffffff;
+  font-family: inherit;
+  transition: border-color 0.2s ease;
+}
+
+.field-input::placeholder {
+  color: #666;
+}
+
+.field-input:focus {
+  border-color: #c9a84c;
+  outline: none;
+}
+
+.button-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.button-row .btn-flex {
+  flex: 1;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: inherit;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s ease;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.btn-primary {
+  background-color: #c9a84c;
+  color: #000;
+  font-weight: 600;
+}
+
+.btn-primary:hover {
+  background-color: #d4b65e;
+  box-shadow: 0 0 16px rgba(201, 168, 76, 0.4);
+}
+
+.btn-outline {
+  background: transparent;
+  border-color: #c9a84c;
+  color: #c9a84c;
+}
+
+.btn-outline:hover {
+  background-color: rgba(201, 168, 76, 0.08);
+  box-shadow: 0 0 12px rgba(201, 168, 76, 0.2);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: #a0a0a0;
+}
+
+.btn-ghost:hover {
+  color: #ffffff;
+  background-color: #1a1a1a;
+}
+
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
+.btn-md {
+  padding: 10px 16px;
+  font-size: 13px;
+}
+
+.helper {
+  font-size: 10px;
+  color: #666;
+  margin-top: 12px;
+  line-height: 1.5;
+}
+
+.main-hint {
+  font-size: 12px;
+  color: #a0a0a0;
+  margin: 0 0 12px 0;
+}
+
+.action-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.devopt-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: transparent;
+  border: 1px solid #1a1a1a;
+  border-radius: 6px;
+  color: #666;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.devopt-toggle:hover {
+  color: #a0a0a0;
+  border-color: #333;
+}
+
+.devopt-content {
+  padding-top: 12px;
+}
+
+.devopt-warning {
+  font-size: 11px;
+  color: #c9a84c;
+  background-color: rgba(201, 168, 76, 0.08);
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  border-radius: 6px;
+  padding: 8px 10px;
+  margin: 0 0 12px 0;
+  line-height: 1.4;
+}
+
+:focus-visible {
+  outline: 2px solid #c9a84c;
+  outline-offset: 2px;
+}
+
+::selection {
+  background-color: rgba(201, 168, 76, 0.3);
+  color: #ffffff;
+}

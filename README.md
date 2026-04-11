@@ -8,13 +8,13 @@ Prodigy Origin enhances your Prodigy Math Game experience with community-built m
 
 > **Looking for Prodigy hacks?** Prodigy Origin is the ultimate open source mod loader and hack tool for Prodigy Math Game.
 
-## Install
+## [Install](https://extension.prodigyorigin.com)
 
 | Browser | Link |
 |---------|------|
-| Chrome | [Chrome Web Store](https://chrome.google.com/webstore/detail/mbjjannikkfihddnepoionimbedjnbib) |
-| Firefox | Firefox Add-ons (coming soon) |
-| Edge | Edge Add-ons (coming soon) |
+| Chrome | [chrome.prodigyorigin.com](https://chrome.prodigyorigin.com/) |
+| Firefox | [firefox.prodigyorigin.com](https://firefox.prodigyorigin.com) |
+| Edge | [edge.prodigyorigin.com](https://edge.prodigyorigin.com) |
 | Manual | [Manual install guides](meta/manual/) |
 
 ## Features

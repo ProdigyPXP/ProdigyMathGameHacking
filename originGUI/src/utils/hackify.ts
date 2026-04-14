@@ -36,14 +36,6 @@ export const runeify = (item, amount) =>
     })).filter(v => v !== undefined);
 
 
-// Get member module
-export function getMemberModule () {
-    return _.player.hasMembership.toString().split("\"")[1];
-}
-
-
-
-
 
 // Begin toHouse function
 export function toHouse (userID: number) {

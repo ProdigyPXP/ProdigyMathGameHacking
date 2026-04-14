@@ -6,7 +6,7 @@
 import { category } from "../index"; // Import the mod menu bases.
 import Hack from "../class/Hack";
 import { Swal, Toast, Confirm, NumberInput } from "../utils/swal"; // Import Swal, Toast, NumberInput, and Confirm from swal
-import { _, saveCharacter, VERY_LARGE_NUMBER, player } from "../utils/util"; // Import Prodigy typings
+import { _, saveCharacter, player } from "../utils/util"; // Import Prodigy typings
 import { names, ids, itemify } from "../utils/hackify"; // Import some conversion functions and arrays
 // END IMPORTS
 
@@ -129,15 +129,15 @@ new Hack(category.inventory, "Selector (Advanced)", "Choose a specific object an
             const amt = await NumberInput.fire("Amount", "How many of the object would you like?", "question");
             if (!amt.value) return;
             // @ts-expect-error
-            if (player.backpack.data[ids[val.value]].findIndex(e => e.ID === _.gameData[ids[val.value]][correct].ID) === -1) {
+            const existingIdx = player.backpack.data[ids[val.value]].findIndex(e => e.ID === _.gameData[ids[val.value]][correct].ID);
+            if (existingIdx === -1) {
                 player.backpack.data[ids[val.value]].push({
                     ID: _.gameData[ids[val.value]][correct].ID,
                     N: amt.value
                 });
-
             } else {
-                // @ts-expect-error
-                const num = player.backpack.data[ids[val.value]].findIndex(e => e.ID === _.gameData[ids[val.value]][correct].ID);
+                // Item already present — set (not increment) its quantity to match "How many would you like?".
+                player.backpack.data[ids[val.value]][existingIdx].N = amt.value;
             }
 
             console.log(_.gameData[ids[val.value]][correct].ID);
@@ -230,22 +230,6 @@ new Hack(category.inventory, "Remove item").setClick(async () => {
 
 
 
-// Begin Obtain All Furniture
-new Hack(category.inventory, "Obtain All Furniture").setClick(async () => {
-    if (!(await Confirm.fire("Are you sure you want to get all furniture?")).value) {
-        return console.log("Cancelled.");
-    } else {
-        // @ts-expect-error
-        _.gameData.dorm.forEach(x =>
-            player.house.data.items[x.ID] = {
-                A: [],
-                N: VERY_LARGE_NUMBER
-            }
-        );
-    }
-    return Toast.fire("Furniture Added!", "All furniture have been added to your inventory!", "success");
-});
-// End Obtain All Furniture
 
 
 

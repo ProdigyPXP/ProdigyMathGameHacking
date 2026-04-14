@@ -10,28 +10,21 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // ROOT CAUSES
 // ─────────────────────────────────────────────────────────────────────────────
-// 1. _.constants undefined — P-NP regex for `A.constants={"GameConstants...`
-//    no longer matches the current game build.  Affects: Disable Math,
-//    Skip Enemy Turn, Disable Monster Encounters, Disable Inactivity Kick.
-//
-// 2. prodigy.giftBoxController removed from prodigy object; not in
+// 1. prodigy.giftBoxController removed from prodigy object; not in
 //    gameContainer either.  Affects: Obtain Conjure Cubes.
 //
-// 3. player.appearance.setGender() removed from game prototype.
-//    Remaining methods: setEyeColor, setFace, setHair, setSkinColor.
-//    Affects: Bobbify.
+// 2. Battle is server-authoritative in SecureBattleRevamp — no client-side
+//    victory or heal method survives. Escape was restored via
+//    state._battleController.escapeBattle(), but Win/Heal cannot be faked
+//    client-side.  Affects: Win Battle, Heal Team.
 //
-// 4. Battle states renamed — "Battle"/"SecureBattle" replaced by
-//    "SecureBattleRevamp"; run-away/victory methods not found on new state.
-//    Affects: Escape Battle, Win Battle, Heal Team.
-//
-// 5. battleData module not discoverable in gameContainer binding map.
+// 3. battleData module not discoverable in gameContainer binding map.
 //    Affects: Get all Runes.
 //
-// 6. prodigy.pvpNetworkHandler not present (server-side patch).
+// 4. prodigy.pvpNetworkHandler not present (server-side patch).
 //    Affects: Arena Point Increaser.
 //
-// 7. prodigy.debugMisc.disableTimeoutDialogue not present (server-side patch).
+// 5. prodigy.debugMisc.disableTimeoutDialogue not present (server-side patch).
 //    Affects: Disable Timeout Dialog.
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -53,46 +46,9 @@ new Hack(category.player, "Obtain Conjure Cubes").setClick(async () => {
 
 
 // ═══════════════════════════════════════════════════════════════════
-// FROM battle.ts — Disable Math [PvP, PvE]
-// ❌ Broken: _.constants is undefined (P-NP constants regex mismatch)
-// ═══════════════════════════════════════════════════════════════════
-
-new Toggler(category.battle, "Disable math [PvP, PvE]", "Disable math in PvP, PvE, anywhere! This doesn't work in the Floatling town.").setEnabled(async () => {
-    _.constants.constants["GameConstants.Debug.EDUCATION_ENABLED"] = false;
-    return Toast.fire("Enabled!", "You will no longer do Math!", "success");
-}).setDisabled(async () => {
-    _.constants.constants["GameConstants.Debug.EDUCATION_ENABLED"] = true;
-    return Toast.fire("Disabled!", "You will now do Math!", "success");
-});
-
-
-// ═══════════════════════════════════════════════════════════════════
-// FROM battle.ts — Escape Battle [PvP, PvE]
-// ❌ Broken: allowlist checks for "Battle"/"SecureBattle"; current state
-//            is "SecureBattleRevamp" — falls through to "Invalid State"
-// ═══════════════════════════════════════════════════════════════════
-
-new Hack(category.battle, "Escape Battle [PvP, PvE]", "Escape any battle, PvP or PvE!").setClick(async () => {
-    const currentState = game.state.current;
-    if (currentState === "PVP") {
-        Object.fromEntries(_.instance.game.state.states).PVP.endPVP();
-        return Toast.fire("Escaped!", "You have successfully escaped from the PvP battle.", "success");
-    } else if (currentState === "CoOp") {
-        prodigy.world.$(player.data.zone);
-        return Toast.fire("Escaped!", "You have successfully escaped from the battle.", "success");
-    } else if (!["Battle", "SecureBattle"].includes(currentState)) {
-        return Toast.fire("Invalid State.", "You are currently not in a battle.", "error");
-    } else {
-        Object.fromEntries(_.instance.game.state.states)[currentState].runAwayCallback();
-        return Toast.fire("Escaped!", "You have successfully escaped from the PvE battle.", "success");
-    }
-});
-
-
-// ═══════════════════════════════════════════════════════════════════
 // FROM battle.ts — Win Battle [PvE]
-// ❌ Broken: switch only handles "Battle"/"SecureBattle"; current state
-//            is "SecureBattleRevamp" — hits default "not in a battle"
+// 🔒 Patched: battle is server-authoritative in SecureBattleRevamp.
+//             No client-side victory method available.
 // ═══════════════════════════════════════════════════════════════════
 
 new Hack(category.battle, "Win Battle [PvE]", "Instantly win a battle in PvE.").setClick(async () => {
@@ -115,23 +71,9 @@ new Hack(category.battle, "Win Battle [PvE]", "Instantly win a battle in PvE.").
 
 
 // ═══════════════════════════════════════════════════════════════════
-// FROM battle.ts — Skip Enemy Turn
-// ❌ Broken: _.constants is undefined (P-NP constants regex mismatch)
-// ═══════════════════════════════════════════════════════════════════
-
-new Toggler(category.battle, "Skip enemy turn").setEnabled(async () => {
-    _.constants.constants["GameConstants.Battle.SKIP_ENEMY_TURN"] = true;
-    return Toast.fire("Skipping!", "Enemy turns will now be skipped.", "success");
-}).setDisabled(async () => {
-    _.constants.constants["GameConstants.Battle.SKIP_ENEMY_TURN"] = false;
-    return Toast.fire("Disabled", "Enemy turns will no longer be skipped.", "success");
-});
-
-
-// ═══════════════════════════════════════════════════════════════════
 // FROM battle.ts — Heal Team [PvE]
-// ❌ Broken: state check requires "Battle"/"SecureBattle"; current state
-//            is "SecureBattleRevamp" — returns "Invalid State"
+// 🔒 Patched: battle is server-authoritative in SecureBattleRevamp.
+//             player.heal() no longer drives server state mid-battle.
 // ═══════════════════════════════════════════════════════════════════
 
 new Hack(category.battle, "Heal Team [PvE]", "Instantly heals you and your pets, if you are in PvE.").setClick(async () => {
@@ -144,63 +86,6 @@ new Hack(category.battle, "Heal Team [PvE]", "Instantly heals you and your pets,
     } else {
         return Toast.fire("Invalid State.", "Your are currently not in a battle.", "error");
     }
-});
-
-
-// ═══════════════════════════════════════════════════════════════════
-// FROM misc.ts — Disable Monster Encounters
-// ❌ Broken: _.constants is undefined (P-NP constants regex mismatch)
-// ═══════════════════════════════════════════════════════════════════
-
-new Toggler(category.misc, "Disable Monster Encounters").setEnabled(async () => {
-    _.constants.constants["GameConstants.Debug.SCALE_ENCOUNTER_DISTANCE"] = 0;
-    return Toast.fire("Enabled!", "Monsters will no longer battle you.", "success");
-}).setDisabled(() => {
-    _.constants.constants["GameConstants.Debug.SCALE_ENCOUNTER_DISTANCE"] = 1;
-    return Toast.fire("Disabled!", "Monsters will now battle you.", "success");
-});
-
-
-// ═══════════════════════════════════════════════════════════════════
-// FROM misc.ts — Bobbify
-// ❌ Broken: player.appearance.setGender() removed from game prototype.
-//            Crashes before any appearance changes are applied.
-//            Remaining methods: setEyeColor, setFace, setHair, setSkinColor
-// ═══════════════════════════════════════════════════════════════════
-
-new Hack(category.misc, "Bobbify", "Converts your account into Bobby Fancywoman.").setClick(async () => {
-    if (!(await Confirm.fire("Are you sure you want your account to be turned into Bobby Fancywoman?", "This action is not reversable.")).value) return;
-
-    player.name.data.nickname = null;
-    player.name.data.firstName = 44;
-    player.name.data.middleName = 754;
-    player.name.data.lastName = 882;
-    player.data.stars = -1e22;
-    player.data.level = 69;
-
-    player.appearance.setGender("male");   // <-- crashes here; method removed
-    player.appearance.setEyeColor(1);
-    player.appearance.setFace(4);
-    player.appearance.setHair(19, 1);
-    player.appearance.setSkinColor(1);
-    player.equipment.setFollow(19);
-    player.equipment.setHat(19);
-    player.equipment.setBoots(19);
-    player.equipment.setOutfit(19);
-    player.equipment.setWeapon(19);
-
-    return Toast.fire("Bobbified!", "You are now Bobby Fancywoman.", "success");
-});
-
-
-// ═══════════════════════════════════════════════════════════════════
-// FROM utility.ts — Disable Inactivity Kick
-// ❌ Broken: _.constants is undefined (P-NP constants regex mismatch)
-// ═══════════════════════════════════════════════════════════════════
-
-new Hack(category.utility, "Disable inactivity kick", "Keeps you from being logged out for inactivity.").setClick(async () => {
-    _.constants.constants["GameConstants.Inactivity.LOG_OUT_TIMER_SECONDS"] = 0;
-    return Toast.fire("Success!", "You now will never be logged out!", "success");
 });
 
 

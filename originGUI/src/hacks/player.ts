@@ -7,7 +7,7 @@ import { category } from "../index"; // Import the mod menu bases.
 import Toggler from "../class/Toggler";
 import Hack from "../class/Hack";
 import { _, getItem, VERY_LARGE_NUMBER, prodigy, saveCharacter, player} from "../utils/util";  // Import Prodigy typings and VERY_LARGE_NUMBER
-import { getMemberModule, ids, itemify } from "../utils/hackify";  // Import useful arrays and functions
+import { ids, itemify } from "../utils/hackify";  // Import useful arrays and functions
 
 
 // END IMPORTS
@@ -319,17 +319,36 @@ new Hack(category.player, "Set Losses").setClick(async () => {
 
 
 
-// Begin Toggle membership
-new Toggler(category.player, "Toggle membership").setEnabled(async () => {
-    _.instance.prodigy.gameContainer.get(getMemberModule()).data.membership.active = true;
+// Begin Toggle Membership (Client Side)
+// Client-side cosmetic only — actual member purchases are gated by the server-signed
+// JWT bearer token (featureAccess.active), which we can't forge. This toggle lights
+// up the in-game badge at Ultra tier (103) via a direct getMemberTier override, plus
+// P-NP's deep _data + hasFeatureAccess override for the rest of the derived state.
+let __originalGetMemberTier: (() => number) | null = null;
+new Toggler(category.player, "Toggle Membership (Client Side)").setEnabled(async () => {
+    if (!(_ as any).functions?.setMembership?.(true)) {
+        return Toast.fire("Error", "Membership service not found.", "error");
+    }
+    if (!__originalGetMemberTier) __originalGetMemberTier = player.getMemberTier?.bind(player);
+    (player as any).getMemberTier = () => 103;
     player.appearanceChanged = true;
-    return Toast.fire("Success!", "You now have Prodigy membership!", "success");
+    return Toast.fire({
+        icon: "success",
+        title: "Membership enabled (cosmetic)",
+        html: "Use <b>Selector (Advanced)</b> to get member-only items."
+    });
 }).setDisabled(() => {
-    _.instance.prodigy.gameContainer.get(getMemberModule()).data.membership.active = false;
+    if (!(_ as any).functions?.setMembership?.(false)) {
+        return Toast.fire("Error", "Membership service not found.", "error");
+    }
+    if (__originalGetMemberTier) {
+        (player as any).getMemberTier = __originalGetMemberTier;
+        __originalGetMemberTier = null;
+    }
     player.appearanceChanged = true;
     return Toast.fire("Success!", "You no longer have Prodigy membership!", "success");
 });
-// End Toggle membership
+// End Toggle Membership (Client Side)
 
 
 
@@ -470,6 +489,58 @@ new Hack(category.player, "Permanent Morph", "Makes Your Current Morph Last Fore
     return Toast.fire("Success!", "You're morph will last forever!", "success");
 });
 // End Permanent Morph
+
+
+// Begin Morph Player
+new Hack(category.player, "Morph Player [BETA]", "Morph into a pet, furnishing, or follow.").setClick(async () => {
+
+    if (!(await Confirm.fire("This hack is in BETA", "Expect bugs, and it might not work properly.")).value) {
+        return console.log("Cancelled");;
+    }
+
+    const morphType = await Swal.fire({
+        title: "Which morph type?",
+        input: "select",
+        inputOptions: {
+            pet: "Pet",
+            dorm: "Furniture",
+            follow: "Follow"
+        },
+        inputPlaceholder: "Morph Type",
+        inputValidator: res => res ? "" : "Please select a morph type.",
+        showCancelButton: true
+    });
+
+    if (!morphType?.value) return;
+
+    // swal inputOptions accepts an object, the property being the value it returns, the value being what it displays
+    // kinda weird to explain, just look at how morphType does it
+    // we want it to display a pretty string, and return the petID
+    const morphOptions = {};
+    // @ts-expect-error
+    _.gameData[morphType.value].forEach((morph) => morphOptions[morph.ID] = `${morph.name} (${morph.ID})`);
+
+    const morphID = await Swal.fire({
+        title: "Which morph?",
+        input: "select",
+        inputOptions: morphOptions,
+        inputPlaceholder: "Morph ID",
+        inputValidator: res => res ? "" : "Please select a morph ID.",
+        showCancelButton: true
+    });
+
+    if (!morphID.value) return;
+    player.getPlayerData().playerTransformation = {
+        transformType: morphType.value,
+        transformID: morphID.value,
+        maxTime: 60 * 60 * 1000,
+        timeRemaining: 60 * 60 * 1000
+    };
+    player.appearanceChanged = true;
+
+    return Toast.fire("Morphed!", "You've been morphed.", "success");
+});
+// End Morph Player
 
 
 

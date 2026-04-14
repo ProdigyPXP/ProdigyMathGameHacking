@@ -9,7 +9,18 @@ const rootDir = path.dirname(fileURLToPath(import.meta.url));
 const bundlePath = path.join(rootDir, "dist", "bundle.js");
 const sourceDir = path.join(rootDir, "src");
 
-const app = http.createServer();
+const app = http.createServer((req, res) => {
+	if (req.url === "/bundle.js") {
+		res.writeHead(200, {
+			"Content-Type": "application/javascript",
+			"Access-Control-Allow-Origin": "*",
+		});
+		fs.createReadStream(bundlePath).pipe(res);
+		return;
+	}
+	res.writeHead(404);
+	res.end();
+});
 
 const io = new Server(app, {
 	cors: {

@@ -7,6 +7,7 @@ import { category } from "../index"; // Import the mod menu bases and the dimens
 import Toggler from "../class/Toggler";
 import Hack from "../class/Hack";
 import { _, saveCharacter, current, player } from "../utils/util";  // Import Prodigy typings
+import { setConstant } from "../utils/constants"; // FlagProvider helper
 // END IMPORTS
 
 
@@ -230,6 +231,19 @@ new Hack(category.utility, "Eval Console", "Evaluate JavaScript code without ope
     return Toast.fire("Evaluated!", "Code was evaluated.", "success");
 });
 // End Eval Console
+
+
+
+
+// Begin Disable inactivity kick
+// Uses FlagProvider service "35d-3bd9" (see P-NP vault/battle-constants-and-types.md).
+new Hack(category.utility, "Disable inactivity kick", "Keeps you from being logged out for inactivity.").setClick(async () => {
+    if (!setConstant("GameConstants.Inactivity.LOG_OUT_TIMER_SECONDS", 0)) {
+        return Toast.fire("Error", "FlagProvider service not found.", "error");
+    }
+    return Toast.fire("Success!", "You now will never be logged out!", "success");
+});
+// End Disable inactivity kick
 
 
 

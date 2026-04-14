@@ -131,21 +131,26 @@ if (localStorage.getItem("level")) {
 }
 
 
+// Abort any previous Origin listeners before registering new ones
+(window as any).__ORIGIN_ABORT__?.abort();
+const _originAbort = new AbortController();
+(window as any).__ORIGIN_ABORT__ = _originAbort;
+
 let shownMenu : boolean = true;
+// Use capture phase + stopImmediatePropagation to prevent old baked-in listeners from firing
 document.addEventListener("keydown", function (event) {
 	if (event.key == "Shift") {
+		event.stopImmediatePropagation();
 
 		console.log("Shift key was pressed.");
 
 		if (shownMenu == true) {
-			// Mods are shown, so let's hide them.
 			console.log("Hiding mod menu...");
 			document.getElementById("origin-menu").style.display = "none";
 			document.getElementById("origin-toggler").style.display = "none";
 			shownMenu = false;
 			console.log("Hidden mod menu.");
 		} else {
-			// Mods are hidden, so let's show them.
 			console.log("Showing mod menu...");
 			document.getElementById("origin-menu").style.display = "block";
 			document.getElementById("origin-toggler").style.display = "block";
@@ -153,7 +158,7 @@ document.addEventListener("keydown", function (event) {
 			console.log("Shown mod menu.");
 		}
 	}
-});
+}, { capture: true, signal: _originAbort.signal });
 
 
 if (process.env.NODE_ENV === "development") {

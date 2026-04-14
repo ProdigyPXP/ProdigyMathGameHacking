@@ -119,60 +119,6 @@ new Hack(category.beta, "Edit Pet [BETA]", "Edit a pet.").setClick(async () => {
 
 
 
-
-// Begin Morph Player
-new Hack(category.beta, "Morph Player [BETA]", "Morph into a pet, furnishing, or follow.").setClick(async () => {
-
-    if (!(await Confirm.fire("This hack is in BETA", "Expect bugs, and it might not work properly.")).value) {
-        return console.log("Cancelled");;
-    }
-
-    const morphType = await Swal.fire({
-        title: "Which morph type?",
-        input: "select",
-        inputOptions: {
-            pet: "Pet",
-            dorm: "Furniture",
-            follow: "Follow"
-        },
-        inputPlaceholder: "Morph Type",
-        inputValidator: res => res ? "" : "Please select a morph type.",
-        showCancelButton: true
-    });
-
-    if (!morphType?.value) return;
-
-    // swal inputOptions accepts an object, the property being the value it returns, the value being what it displays
-    // kinda weird to explain, just look at how morphType does it
-    // we want it to display a pretty string, and return the petID
-    const morphOptions = {};
-    // @ts-expect-error
-    _.gameData[morphType.value].forEach((morph) => morphOptions[morph.ID] = `${morph.name} (${morph.ID})`);
-
-    const morphID = await Swal.fire({
-        title: "Which morph?",
-        input: "select",
-        inputOptions: morphOptions,
-        inputPlaceholder: "Morph ID",
-        inputValidator: res => res ? "" : "Please select a morph ID.",
-        showCancelButton: true
-    });
-
-    if (!morphID.value) return;
-    player.getPlayerData().playerTransformation = {
-        transformType: morphType.value,
-        transformID: morphID.value,
-        maxTime: 60 * 60 * 1000,
-        timeRemaining: 60 * 60 * 1000
-    };
-    player.appearanceChanged = true;
-
-    return Toast.fire("Morphed!", "You've been morphed.", "success");
-});
-// End Morph Player
-
-
-
 new Toggler(category.beta, "(client side) Toggle Invisibility [BETA]", "Lets you appear invisible on your own screen.").setEnabled(async () => {
     // current.user.alpha = 0;
     current.user.visible = false;

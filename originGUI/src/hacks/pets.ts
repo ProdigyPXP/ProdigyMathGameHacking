@@ -58,7 +58,11 @@ new Hack(category.pets, "Get All Pets").setClick(async () => {
 new Hack(category.pets, "Get All Legacy Epics").setClick(async () => {
 
 
-    if (!(await Confirm.fire("This may damage your account.", "Attempting to add legacy epics may damage your account. Would you still like to add all legacy epics to your team?", "warning")).value) {
+    if (!(await Confirm.fire({
+        title: "This may damage your account.",
+        html: "Attempting to add legacy epics may damage your account.<br><br><b>Warning:</b> this does <b>NOT</b> save on reload — the pets will disappear after refreshing.<br><br>Would you still like to add all legacy epics to your team?",
+        icon: "warning"
+    })).value) {
         return console.log("Cancelled");
     }
 
@@ -84,7 +88,11 @@ new Hack(category.pets, "Get All Legacy Epics").setClick(async () => {
 // Begin Get All Mythical Epics
 new Hack(category.pets, "Get All Mythical Epics").setClick(async () => {
 
-    if (!(await Confirm.fire("Would you like to add all mythical epics to your pets?")).value) {
+    if (!(await Confirm.fire({
+        title: "Add all mythical epics?",
+        html: "<b>Warning:</b> this does <b>NOT</b> save on reload — the pets will disappear after refreshing.<br><br>Would you like to add all mythical epics to your pets?",
+        icon: "warning"
+    })).value) {
         return console.log("Cancelled");
     }
 

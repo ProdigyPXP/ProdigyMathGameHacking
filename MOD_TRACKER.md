@@ -1,6 +1,6 @@
 # Origin GUI — Mod Tracker
 
-Tested against Prodigy Math Game version **2026.19.0** on **2026-04-06**.  
+Re-tested against Prodigy Math Game version **2026.18.1** on **2026-04-13** after OriginGUI mod repairs.
 Extension: Prodigy Origin (P-NP patched game).
 
 **Legend:**  
@@ -12,13 +12,13 @@ Extension: Prodigy Origin (P-NP patched game).
 
 | Root Cause | Affected Mods |
 |---|---|
-| `_.constants` is `undefined` — P-NP regex patch for `A.constants={"GameConstants...` failed to match current game build | Disable Math, Skip Enemy Turn, Disable Monster Encounters, Disable Inactivity Kick |
 | `prodigy.giftBoxController` removed from prodigy object; not in gameContainer either | Obtain Conjure Cubes; Conjure Cubes step in Max Account / Hypermax Account |
-| `player.appearance.setGender()` removed from game (method no longer on prototype) | Bobbify |
-| Battle states renamed — "Battle"/"SecureBattle" replaced by "SecureBattleRevamp"; no run-away/victory methods found on new state | Escape Battle (in-battle path), Win Battle, Heal Team |
+| Battle is server-authoritative in `SecureBattleRevamp` — no client-side victory/heal method | Win Battle, Heal Team |
 | `battleData` module not discoverable in gameContainer binding map | Get all Runes, Runes portion of Hypermax Account |
 | `pvpNetworkHandler` not present on prodigy object | Arena Point Increaser |
 | `debugMisc.disableTimeoutDialogue` not present | Disable Timeout Dialog |
+
+**Resolved (2026-04-13):** `_.constants` undefined — replaced with FlagProvider service `"35d-3bd9"` (`.set(key, value)` / `.get(key)`). Fixes Disable Math, Skip Enemy Turn, Disable Monster Encounters, Disable Inactivity Kick. Battle state rename — Escape Battle now handles `SecureBattleRevamp` via `state._battleController.escapeBattle()`. Toggle Membership rewritten against service `"859-25be"` with `isMember` getter override.
 
 ---
 
@@ -34,7 +34,7 @@ Extension: Prodigy Origin (P-NP patched game).
 | **Obtain Conjure Cubes** | ❌ Broken | `prodigy.giftBoxController` is undefined. Crashes on call. |
 | **Set Wins** | ✅ Working | Sets `player.data.win`. |
 | **Set Losses** | ✅ Working | Sets `player.data.loss`. |
-| **Toggle membership** | ✅ Working | Finds member module `cdc-6a10` via `player.hasMembership.toString()`. Toggles `data.active` (not `data.membership.active`). |
+| **Toggle membership** | ⚠️ In progress | Rewritten against service `"859-25be"` with instance-level `isMember` getter override (`Object.defineProperty(ms, 'isMember', { get: () => true })`). Fix in progress — verify live. |
 | **Set name (Client side only)** | ✅ Working | Overrides `player.getName()`. Client-side only, reverts on reload. |
 | **Change Name** | ✅ Working | Edits `player.name.data.firstName/middleName/lastName/nickname`. |
 | **Uncap player level (client side only)** | ✅ Working | Overrides `player.getLevel()` via eval. Client-side. |
@@ -54,10 +54,10 @@ Extension: Prodigy Origin (P-NP patched game).
 | Mod | Status | Notes |
 |---|---|---|
 | **Item stacker** | ✅ Working | All 13 item categories populated. Removes bounty notes. |
-| **Clear inventory** | ⏭️ Not tested | Destructive. Logic is straightforward (`player.backpack.data[k] = []` for all keys). |
+| **Clear inventory** | ✅ Working | `Object.keys(player.backpack.data).forEach(d => player.backpack.data[d] = [])` clears all 13 categories. Verified. |
 | **Selector (Basic)** | ✅ Working | All 13 item categories accessible from `_.gameData`. |
-| **Selector (Advanced)** | ⚠️ Partial | **Bug:** When item already exists in backpack (else branch, line ~140 inventory.ts), the quantity `N` is never updated — only `findIndex` is called and the result is unused. New items are added correctly. |
-| **Obtain All Furniture** | ⚠️ Partial | **Duplicated** — appears twice in the menu (once with custom quantity input, once hardcoded to `VERY_LARGE_NUMBER`). Both work. The duplicate button is a code defect. |
+| **Selector (Advanced)** | ✅ Working | Fixed 2026-04-13: else branch now sets quantity `N = amt.value` on the existing item. |
+| **Obtain All Furniture** | ✅ Working | Fixed 2026-04-13: duplicate button removed; single entry honors user-specified amount. |
 | **Obtain All Mounts** | ✅ Working | 41 mounts added via `itemify`. |
 | **Remove item** | ✅ Working | Finds item by ID, decrements N, splices if ≤ 0. |
 
@@ -96,15 +96,15 @@ Extension: Prodigy Origin (P-NP patched game).
 
 | Mod | Status | Notes |
 |---|---|---|
-| **Disable math [PvP, PvE]** | ❌ Broken | Requires `_.constants` which is undefined. Constant `GameConstants.Debug.EDUCATION_ENABLED` inaccessible. |
+| **Disable math [PvP, PvE]** | ✅ Working | Fixed 2026-04-13: uses FlagProvider service `"35d-3bd9"` → `set("GameConstants.Debug.EDUCATION_ENABLED", false)`. |
 | **Instant Kill [PvE]** | ✅ Working | Sets `player.modifiers.damage` to `VERY_LARGE_NUMBER`. No battle state required. |
 | **PvP Health [PvP]** | ✅ Working | Sets `player.pvpHP` and overrides `player.getMaxHearts`. No battle state required. |
-| **Escape Battle [PvP, PvE]** | ❌ Broken | State check uses `["Battle", "SecureBattle"]` allowlist. Current battle state is `SecureBattleRevamp` — falls through to "Invalid State" error. PVP/CoOp paths may still work. |
-| **Win Battle [PvE]** | ❌ Broken | Switch statement has cases for `"Battle"` and `"SecureBattle"` only. `SecureBattleRevamp` hits `default` → "You are currently not in a battle." error. |
+| **Escape Battle [PvP, PvE]** | ✅ Working | Fixed 2026-04-13: PvE branch handles `SecureBattleRevamp` via `state._battleController.escapeBattle()`. PvP/CoOp paths unchanged. |
+| **Win Battle [PvE]** | 🔒 Patched | Server-authoritative; no client-side victory method available in `SecureBattleRevamp`. Archived in `patchedMods.ts`. |
 | **Set Battle Hearts [PvP, PvE]** | ✅ Working | Sets `player.getMaxHearts`, `pvpHP`, and `player.data.hp`. No battle state required. |
 | **Fill Battle Energy [PvP, PvE]** | ⏭️ Not tested | Requires being in battle. Logic calls `game.state.getCurrentState().teams[0].setEnergy(99)` — not testable from overworld. |
-| **Skip enemy turn** | ❌ Broken | Requires `_.constants`. Constant `GameConstants.Battle.SKIP_ENEMY_TURN` inaccessible. |
-| **Heal Team [PvE]** | ❌ Broken | State check requires `["Battle", "SecureBattle"]`. Current state is `SecureBattleRevamp` — would return "Invalid State" error when in battle. |
+| **Skip enemy turn** | ✅ Working | Fixed 2026-04-13: uses FlagProvider `"35d-3bd9"` → `set("GameConstants.Battle.SKIP_ENEMY_TURN", true)`. |
+| **Heal Team [PvE]** | 🔒 Patched | Server-authoritative; `player.heal()` no longer drives server state mid-battle. Archived in `patchedMods.ts`. |
 
 ---
 
@@ -121,13 +121,11 @@ Extension: Prodigy Origin (P-NP patched game).
 | Mod | Status | Notes |
 |---|---|---|
 | **Skip Tutorial** | ✅ Working | `world.getZone("house"/"academy").testQuest()` accessible. |
-| **Disable Monster Encounters** | ❌ Broken | Requires `_.constants`. Constant `GameConstants.Debug.SCALE_ENCOUNTER_DISTANCE` inaccessible. |
+| **Disable Monster Encounters** | ✅ Working | Fixed 2026-04-13: uses FlagProvider `"35d-3bd9"` → `set("GameConstants.Debug.SCALE_ENCOUNTER_DISTANCE", 0)`. |
 | **Unlimited Spins** | ✅ Working | Overrides `player.canSpin` function. Restores original on disable. |
-| **Bobbify** | ❌ Broken | `player.appearance.setGender()` no longer exists on appearance prototype (removed in game update). Crashes before any changes are applied. `setEyeColor`, `setFace`, `setHair`, `setSkinColor` are still present. |
 | **Reset Account** | ⏭️ Not tested | Destructive and irreversible. |
 | **[Fix] Fix Battle Crash** | ✅ Working | Calls `assignRandomSpells()` on all pets in team. |
 | **[Fix] Stuck in Unfinished Tower Fix** | ✅ Working | `world.zones["house"].teleport("exit")` works. |
-| **uwu** | ✅ Working | `_.localizer.dataSource._languageData` accessible (14,747 keys). `_.gameData` names accessible. Heavy operation. |
 
 ---
 
@@ -141,7 +139,7 @@ Extension: Prodigy Origin (P-NP patched game).
 | **Load local character [Local]** | ✅ Working | POST to `game-api/v3/characters/:id` with stored data. Requires reload to take effect. |
 | **Save Character** | ✅ Working | `_.network.getCharData` accessible. |
 | **Update menu** | ✅ Working | Removes menu/toggler elements, fetches fresh bundle from GitHub master, evals it. |
-| **Disable inactivity kick** | ❌ Broken | Requires `_.constants`. Constant `GameConstants.Inactivity.LOG_OUT_TIMER_SECONDS` inaccessible. |
+| **Disable inactivity kick** | ✅ Working | Fixed 2026-04-13: uses FlagProvider `"35d-3bd9"` → `set("GameConstants.Inactivity.LOG_OUT_TIMER_SECONDS", 0)`. |
 | **Enable menu resize** | ✅ Working | Sets `origin-menu` style `resize: both`. |
 | **Edit walkspeed** | ✅ Working | Duplicate of Location mod. Same logic, works. |
 | **Toggle Click Teleporting** | ✅ Working | Duplicate of Location mod. Same logic, works. |
@@ -178,22 +176,23 @@ Extension: Prodigy Origin (P-NP patched game).
 
 | Category | Total | ✅ Working | ⚠️ Partial | ❌ Broken | ⏭️ Not Tested | 🔒 Patched |
 |---|---|---|---|---|---|---|
-| Player | 20 | 16 | 1 | 1 | 2 | 0 |
-| Inventory | 7 | 5 | 2 | 0 | 1 | 0 |
+| Player | 20 | 15 | 2 | 1 | 2 | 0 |
+| Inventory | 7 | 7 | 0 | 0 | 0 | 0 |
 | Location | 6 | 6 | 0 | 0 | 0 | 0 |
 | Pets | 7 | 6 | 0 | 0 | 1 | 0 |
-| Battle | 9 | 3 | 0 | 5 | 1 | 0 |
+| Battle | 9 | 6 | 0 | 0 | 1 | 2 |
 | Minigames | 1 | 1 | 0 | 0 | 0 | 0 |
-| Misc | 8 | 5 | 0 | 2 | 1 | 0 |
-| Utility | 12 | 10 | 0 | 1 | 0 | 0 |
+| Misc | 6 | 5 | 0 | 0 | 1 | 0 |
+| Utility | 12 | 11 | 0 | 0 | 1 | 0 |
 | Beta | 8 | 5 | 2 | 1 | 0 | 0 |
 | Patched | 2 | 0 | 0 | 0 | 0 | 2 |
-| **Total** | **80** | **57** | **5** | **10** | **6** | **2** |
+| **Total** | **78** | **62** | **4** | **2** | **6** | **4** |
+
+_Removed (2026-04-13): Bobbify, uwu._
 
 ### Priority Fixes
 
-1. **`_.constants` undefined** — P-NP regex for `A.constants={"GameConstants...` no longer matches game build. Fixes 4 broken mods.
-2. **`giftBoxController` missing** — Find new path or remove Conjure Cubes from Max/Hypermax Account. Fixes 1 broken mod, improves 2 partial.
-3. **`appearance.setGender()` removed** — Bobbify crashes at first call. Update to use remaining appearance methods or remove gender change.
-4. **Battle state rename** — `SecureBattleRevamp` replaced `Battle`/`SecureBattle`. Escape Battle, Win Battle, Heal Team need state name updates.
-5. **`battleData` module** — Get all Runes and Hypermax runes step cannot find the module. Discovery logic needs a new shape function.
+_Recorded 2026-04-13 after repair sweep._
+
+1. **`giftBoxController` missing** — Find new path or remove Conjure Cubes from Max/Hypermax Account. Fixes 1 broken mod, improves 2 partial.
+2. **`battleData` module** — Get all Runes and Hypermax runes step cannot find the module. Discovery logic needs a new shape function.

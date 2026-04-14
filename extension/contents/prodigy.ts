@@ -98,7 +98,11 @@ function injectGameViaFetch(gameUrl: string): void {
     })
     .then(js => {
       const semaphore = `if(window.SW&&window.SW.Load&&typeof window.SW.Load.decrementLoadSemaphore==='function')window.SW.Load.decrementLoadSemaphore();`
-      document.documentElement.setAttribute("onreset", js + "\n" + semaphore)
+      // Prepend 'var URL=window.URL;' to shadow document.URL (a string) with the real
+      // URL constructor. HTML event handlers include the document in their scope chain,
+      // so 'URL' inside an onreset handler resolves to document.URL (the page URL string)
+      // instead of window.URL (the URL class), breaking 'new URL(...)' calls in the game.
+      document.documentElement.setAttribute("onreset", "var URL=window.URL;\n" + js + "\n" + semaphore)
       document.documentElement.dispatchEvent(new CustomEvent("reset"))
       document.documentElement.removeAttribute("onreset")
       console.log("[Origin] Game injected via onreset")
@@ -150,14 +154,43 @@ Element.prototype.append = function (...nodes: (Node | string)[]) {
   return origAppend.apply(this, processed)
 }
 
-// ─── Phase 4: MutationObserver for integrity stripping ───
+// ─── Phase 4: MutationObserver — strip integrity + hijack parser-added game script ───
+let gameScriptHandled = false
+
+function handleParserAddedGameScript(script: HTMLScriptElement): void {
+  if (gameScriptHandled) return
+  gameScriptHandled = true
+  const gameUrl = window.__ORIGIN_GAME_URL__ || script.src
+  // Neutralize the src so the browser doesn't try to load the original (DNR would
+  // block anyway, but this avoids the network error noise + ensures it never runs).
+  origSetAttribute.call(script, "data-origin", "1")
+  script.removeAttribute("src")
+  script.textContent = ""
+  injectGameViaFetch(gameUrl)
+}
+
+function handleGamePreload(link: HTMLLinkElement): void {
+  // Stop the preload from triggering a fetch for the original game.min.js.
+  link.remove()
+}
+
 const integrityObserver = new MutationObserver((mutations) => {
   for (const mutation of mutations) {
     for (const node of mutation.addedNodes) {
-      if (node instanceof HTMLScriptElement || node instanceof HTMLLinkElement) {
+      if (node instanceof HTMLScriptElement) {
         const hasIntegrity = origGetAttribute.call(node, "integrity")
-        if (hasIntegrity) {
-          origRemoveAttribute.call(node, "integrity")
+        if (hasIntegrity) origRemoveAttribute.call(node, "integrity")
+        const src = node.src || ""
+        if (src.includes("game.min.js") && !origGetAttribute.call(node, "data-origin")) {
+          handleParserAddedGameScript(node)
+        }
+      } else if (node instanceof HTMLLinkElement) {
+        const hasIntegrity = origGetAttribute.call(node, "integrity")
+        if (hasIntegrity) origRemoveAttribute.call(node, "integrity")
+        const href = node.href || ""
+        const rel = (node.rel || "").toLowerCase()
+        if (rel === "preload" && href.includes("game.min.js")) {
+          handleGamePreload(node)
         }
       }
     }
@@ -179,75 +212,21 @@ function readUrlsFromBridge(): void {
   }
 }
 
-function rewriteDocument(): void {
-  if (window.__ORIGIN_REWRITTEN__) return
-  window.__ORIGIN_REWRITTEN__ = true
+function scanExistingDom(): void {
+  // Catch the game script / preload if they're already in the DOM by the time we run.
+  const gameScript = document.querySelector<HTMLScriptElement>(
+    'script[src*="game.min.js"]:not([data-origin])'
+  )
+  if (gameScript) handleParserAddedGameScript(gameScript)
 
-  if (!location.pathname.startsWith("/load") && !location.search.includes("launcher=true")) {
-    console.log("[Origin] Not on load page, skipping document rewrite")
-    return
-  }
+  const preloads = document.querySelectorAll<HTMLLinkElement>(
+    'link[rel="preload"][href*="game.min.js"]'
+  )
+  preloads.forEach(handleGamePreload)
 
-  const extensionGameUrl = window.__ORIGIN_GAME_URL__
-  if (!extensionGameUrl) {
-    console.warn("[Origin] No extension game URL available, cannot rewrite")
-    return
-  }
-
-  try {
-    // Strip auth code/state params — they're one-time tokens and re-fetching
-    // them triggers a redirect to play.prodigygame.com (CORS block).
-    const rewriteUrl = new URL(location.href)
-    rewriteUrl.searchParams.delete("code")
-    rewriteUrl.searchParams.delete("state")
-    const xhr = new XMLHttpRequest()
-    xhr.open("GET", rewriteUrl.href, false)
-    xhr.send()
-
-    if (xhr.status === 200 && xhr.responseText) {
-      let html = xhr.responseText
-
-      html = html.replace(/\s+integrity\s*=\s*"[^"]*"/gi, "")
-      html = html.replace(/\s+integrity\s*=\s*'[^']*'/gi, "")
-
-      html = html.replace(
-        /<link[^>]*rel=["']preload["'][^>]*game\.min\.js[^>]*>/gi,
-        "<!-- Origin: preload removed -->"
-      )
-      html = html.replace(
-        /<link[^>]*game\.min\.js[^>]*rel=["']preload["'][^>]*>/gi,
-        "<!-- Origin: preload removed -->"
-      )
-
-      // Replace the entire game script tag with an inline fetch+onreset injector.
-      // We cannot use <script src="raw.githubusercontent.com/..."> because GitHub
-      // serves JS as text/plain, which Chrome's strict MIME check rejects.
-      // An inline script fetches the content as text and injects it via onreset,
-      // which executes in MAIN world without any MIME type restriction.
-      const gameUrl = JSON.stringify(extensionGameUrl)
-      const semaphore = `if(window.SW&&window.SW.Load&&typeof window.SW.Load.decrementLoadSemaphore==='function')window.SW.Load.decrementLoadSemaphore();`
-      // Prepend 'var URL=window.URL;' to shadow document.URL (a string) with the real
-      // URL constructor. HTML event handlers include the document in their scope chain,
-      // so 'URL' inside an onreset handler resolves to document.URL (the page URL string)
-      // instead of window.URL (the URL class), breaking 'new URL(...)' calls in the game.
-      const inlineInjector = `<script>(async()=>{try{const js=await(await fetch(${gameUrl})).text();document.documentElement.setAttribute("onreset","var URL=window.URL;\\n"+js+"\\n${semaphore}");document.documentElement.dispatchEvent(new CustomEvent("reset"));document.documentElement.removeAttribute("onreset");console.log("[Origin] Game injected via onreset")}catch(e){console.error("[Origin] Failed to inject game:",e)}})();<\/script>`
-
-      html = html.replace(
-        /<script[^>]*code\.prodigygame\.com\/code\/[^"']*game\.min\.js[^>]*>\s*(<\/script>)?/gi,
-        inlineInjector
-      )
-
-      console.log("[Origin] Rewriting document: integrity stripped + game script replaced with fetch+onreset injector")
-
-      document.open()
-      document.write(html)
-      document.close()
-
-      console.log("[Origin] Document rewrite complete")
-    }
-  } catch (e) {
-    console.warn("[Origin] Document rewrite failed:", e)
-  }
+  document.querySelectorAll<HTMLScriptElement | HTMLLinkElement>(
+    "script[integrity], link[integrity]"
+  ).forEach((el) => origRemoveAttribute.call(el, "integrity"))
 }
 
 // ─── Init ───
@@ -272,7 +251,7 @@ function rewriteDocument(): void {
   // Check if bridge already set the ready signal (sync default URL case)
   if (document.documentElement?.getAttribute("data-origin-ready")) {
     readUrlsFromBridge()
-    rewriteDocument()
+    scanExistingDom()
     console.log("[Origin] Content script loaded — document rewrite + direct URL replacement active")
     return
   }
@@ -284,7 +263,7 @@ function rewriteDocument(): void {
     if (document.documentElement?.getAttribute("data-origin-ready")) {
       bridgeObserver.disconnect()
       readUrlsFromBridge()
-      rewriteDocument()
+      scanExistingDom()
       console.log("[Origin] Content script loaded — document rewrite + direct URL replacement active (async)")
     }
   })

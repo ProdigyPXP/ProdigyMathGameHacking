@@ -646,12 +646,21 @@ new Hack(category.player, "Get UserID").setClick(async () => {
 new Hack(category.player, "Copy Account", "Copy Account From userID").setClick(async () => {
     const userID = (await NumberInput.fire("What is the userID of the account you want to copy?", undefined, "question")).value;
     if (!userID) return;
-    if (!(await Confirm.fire("Are you sure you want to copy the account?", "This will replace all data on your account with the account your copying."))) return;
+
+    // Fetch the source account data first
     const playerData = await (await fetch(`https://api.prodigygame.com/game-api/v2/characters/${userID}?fields=inventory%2Cdata%2CisMember%2Ctutorial%2Cpets%2Cencounters%2Cquests%2Cappearance%2Cequipment%2Chouse%2Cachievements%2Cstate&userID=${userID}`, {
         headers: {
             Authorization: localStorage.JWT_TOKEN
         }
     })).json();
+
+    // Show confirm dialog AFTER fetch, with warning and source account ID
+    if (!(await Confirm.fire(
+        "WARNING: This operation is IRREVERSIBLE!",
+        `You are about to overwrite ALL of your character data with account #${userID}.\n\nThis action CANNOT be undone. The source account data has not been reviewed.\n\nAre you absolutely sure?`
+    )).value) return;
+
+    // Only proceed with POST if confirmed
     await fetch(`https://api.prodigygame.com/game-api/v3/characters/${userID}`, {
         headers: {
             "Content-Type": "application/json",

@@ -27,6 +27,8 @@ export default class Toggler extends Hack {
 	}
 
 	private migrateOldKey(): void {
+		// This method assumes the parent element's h1 is already in the DOM at construction time.
+		// This is guaranteed by the addArea() function in index.ts that adds the h1 before any Togglers are registered.
 		const newKey = this.getStorageKey();
 		if (this.name !== newKey && localStorage.getItem(this.name) !== null) {
 			localStorage.setItem(newKey, localStorage.getItem(this.name)!);

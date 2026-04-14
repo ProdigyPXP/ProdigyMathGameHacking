@@ -1,18 +1,15 @@
 import { wrapper } from "../index";
 
 const FPSc = document.createElement("button"); // Create menu toggler
-var enabled : boolean = false;
 let fpsInterval: ReturnType<typeof setInterval> | null = null;
 
 
 export function startFps () : void {
     if (fpsInterval) return;
-    enabled = true;
     activate();
 }
 
 export function stopFps () : void {
-    enabled = false;
     if (fpsInterval) {
         clearInterval(fpsInterval);
         fpsInterval = null;
@@ -28,14 +25,6 @@ function activate () : void {
 
 
     fpsInterval = setInterval(() => {
-
-        const fps : number = _.player.game.fps._framerate;
-
-        if (enabled) {
-            FPSc.innerText = fps.toFixed(2) + " FPS";
-        } else {
-            FPSc.remove();
-            return;
-        }
+        FPSc.innerText = _.player.game.fps._framerate.toFixed(2) + " FPS";
     }, 300);
 }

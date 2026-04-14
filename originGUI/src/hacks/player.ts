@@ -648,11 +648,23 @@ new Hack(category.player, "Copy Account", "Copy Account From userID").setClick(a
     if (!userID) return;
 
     // Fetch the source account data first
-    const playerData = await (await fetch(`https://api.prodigygame.com/game-api/v2/characters/${userID}?fields=inventory%2Cdata%2CisMember%2Ctutorial%2Cpets%2Cencounters%2Cquests%2Cappearance%2Cequipment%2Chouse%2Cachievements%2Cstate&userID=${userID}`, {
+    const req = await fetch(`https://api.prodigygame.com/game-api/v2/characters/${userID}?fields=inventory%2Cdata%2CisMember%2Ctutorial%2Cpets%2Cencounters%2Cquests%2Cappearance%2Cequipment%2Chouse%2Cachievements%2Cstate&userID=${userID}`, {
         headers: {
             Authorization: localStorage.JWT_TOKEN
         }
-    })).json();
+    });
+
+    // Validate fetch response
+    if (!req.ok) {
+        return Toast.fire("Error", `Failed to fetch account data: ${req.status} ${req.statusText}`, "error");
+    }
+
+    const playerData = await req.json();
+
+    // Validate that player data exists
+    if (!playerData[userID]) {
+        return Toast.fire("Error", `Account #${userID} not found or data is invalid.`, "error");
+    }
 
     // Show confirm dialog AFTER fetch, with warning and source account ID
     if (!(await Confirm.fire(
@@ -661,18 +673,22 @@ new Hack(category.player, "Copy Account", "Copy Account From userID").setClick(a
     )).value) return;
 
     // Only proceed with POST if confirmed
-    await fetch(`https://api.prodigygame.com/game-api/v3/characters/${userID}`, {
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: localStorage.JWT_TOKEN
-        },
-        body: JSON.stringify({
-            data: JSON.stringify(playerData[userID]),
-            userID: player.userID
-        }),
-        method: "POST"
-    });
-    return Toast.fire("Success!", "Copied Account Successfully! Please reload.", "success");
+    try {
+        await fetch(`https://api.prodigygame.com/game-api/v3/characters/${userID}`, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: localStorage.JWT_TOKEN
+            },
+            body: JSON.stringify({
+                data: JSON.stringify(playerData[userID]),
+                userID: player.userID
+            }),
+            method: "POST"
+        });
+        return Toast.fire("Success!", "Copied Account Successfully! Please reload.", "success");
+    } catch (err) {
+        return Toast.fire("Error", `Network error while copying account: ${err instanceof Error ? err.message : "Unknown error"}`, "error");
+    }
 });
 // End Copy Account
 

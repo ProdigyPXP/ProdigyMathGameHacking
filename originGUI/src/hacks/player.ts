@@ -48,8 +48,7 @@ new Hack(category.player, "Max Account").setClick(async () => {
 
     // Set the players level to 100
     const level = 100;
-    // @ts-expect-error
-    const h = level.value - 2;
+    const h = level - 2;
     const xpConstant = 1.042;
     player.data.stars = Math.round((1 - Math.pow(xpConstant, h)) / (1 - xpConstant) * 20 + 10);
     player.data.level = 100;
@@ -94,12 +93,12 @@ new Hack(category.player, "Max Account").setClick(async () => {
 
     ids.forEach(id => {
         // @ts-expect-error
-        player.backpack.data[id] = itemify(_.gameData[id].filter(l => id === "follow" ? ![125, 126, 127, 128, 129, 134, 135, 136, 137].includes(l.ID) : l), num.value);
+        player.backpack.data[id] = itemify(_.gameData[id].filter(l => id === "follow" ? ![125, 126, 127, 128, 129, 134, 135, 136, 137].includes(l.ID) : l), num);
     });
     // @ts-expect-error
     _.gameData.dorm.forEach(x =>
         // @ts-expect-error
-        player.house.data.items[x.ID] = { A: [], N: num.value });
+        player.house.data.items[x.ID] = { A: [], N: num });
 
     // Remove bounty notes
     // @ts-expect-error
@@ -647,24 +646,49 @@ new Hack(category.player, "Get UserID").setClick(async () => {
 new Hack(category.player, "Copy Account", "Copy Account From userID").setClick(async () => {
     const userID = (await NumberInput.fire("What is the userID of the account you want to copy?", undefined, "question")).value;
     if (!userID) return;
-    if (!(await Confirm.fire("Are you sure you want to copy the account?", "This will replace all data on your account with the account your copying."))) return;
-    const playerData = await (await fetch(`https://api.prodigygame.com/game-api/v2/characters/${userID}?fields=inventory%2Cdata%2CisMember%2Ctutorial%2Cpets%2Cencounters%2Cquests%2Cappearance%2Cequipment%2Chouse%2Cachievements%2Cstate&userID=${userID}`, {
+
+    // Fetch the source account data first
+    const req = await fetch(`https://api.prodigygame.com/game-api/v2/characters/${userID}?fields=inventory%2Cdata%2CisMember%2Ctutorial%2Cpets%2Cencounters%2Cquests%2Cappearance%2Cequipment%2Chouse%2Cachievements%2Cstate&userID=${userID}`, {
         headers: {
             Authorization: localStorage.JWT_TOKEN
         }
-    })).json();
-    await fetch(`https://api.prodigygame.com/game-api/v3/characters/${userID}`, {
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: localStorage.JWT_TOKEN
-        },
-        body: JSON.stringify({
-            data: JSON.stringify(playerData[userID]),
-            userID: player.userID
-        }),
-        method: "POST"
     });
-    return Toast.fire("Success!", "Copied Account Successfully! Please reload.", "success");
+
+    // Validate fetch response
+    if (!req.ok) {
+        return Toast.fire("Error", `Failed to fetch account data: ${req.status} ${req.statusText}`, "error");
+    }
+
+    const playerData = await req.json();
+
+    // Validate that player data exists
+    if (!playerData[userID]) {
+        return Toast.fire("Error", `Account #${userID} not found or data is invalid.`, "error");
+    }
+
+    // Show confirm dialog AFTER fetch, with warning and source account ID
+    if (!(await Confirm.fire(
+        "WARNING: This operation is IRREVERSIBLE!",
+        `You are about to overwrite ALL of your character data with account #${userID}.\n\nThis action CANNOT be undone. The source account data has not been reviewed.\n\nAre you absolutely sure?`
+    )).value) return;
+
+    // Only proceed with POST if confirmed
+    try {
+        await fetch(`https://api.prodigygame.com/game-api/v3/characters/${userID}`, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: localStorage.JWT_TOKEN
+            },
+            body: JSON.stringify({
+                data: JSON.stringify(playerData[userID]),
+                userID: player.userID
+            }),
+            method: "POST"
+        });
+        return Toast.fire("Success!", "Copied Account Successfully! Please reload.", "success");
+    } catch (err) {
+        return Toast.fire("Error", `Network error while copying account: ${err instanceof Error ? err.message : "Unknown error"}`, "error");
+    }
 });
 // End Copy Account
 

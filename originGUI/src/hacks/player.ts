@@ -141,7 +141,7 @@ new Hack(category.player, "Max Account").setClick(async () => {
     // add pets
     // @ts-expect-error
     _.gameData.pet.forEach(x => {
-        player.kennel.addPet(x.ID.toString(), VERY_LARGE_NUMBER, 26376, 100);
+        player.kennel.addPet(x.ID, VERY_LARGE_NUMBER, 26376, 100);
     });
 
     // add encounter info

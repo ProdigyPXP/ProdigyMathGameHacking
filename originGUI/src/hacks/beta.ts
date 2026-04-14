@@ -296,7 +296,7 @@ new Hack(category.beta, "Hypermax Account [BETA]").setClick(async () => {
     // add pets
     // @ts-expect-error
     _.gameData.pet.forEach(x => {
-        player.kennel.addPet(x.ID.toString(), VERY_LARGE_NUMBER, 26376, 100);
+        player.kennel.addPet(x.ID, VERY_LARGE_NUMBER, 26376, 100);
     });
 
     // add encounter info
@@ -326,7 +326,7 @@ new Hack(category.beta, "Hypermax Account [BETA]").setClick(async () => {
     const mythepics = _.gameData.pet.filter(x => [158, 166, 168].includes(x.ID));
     // @ts-expect-error
     mythepics.forEach(x => {
-        player.kennel.addPet(x.ID.toString(), VERY_LARGE_NUMBER, 26376, 100);
+        player.kennel.addPet(x.ID, VERY_LARGE_NUMBER, 26376, 100);
     });
     // Fix broken pets
     // @ts-expect-error
@@ -342,7 +342,7 @@ new Hack(category.beta, "Hypermax Account [BETA]").setClick(async () => {
     const legepics = _.gameData.pet.filter(x => [125, 126, 127, 128, 129, 130, 131, 132, 133].includes(x.ID));
     // @ts-expect-error	
     legepics.forEach(x => {
-        player.kennel.addPet(x.ID.toString(), VERY_LARGE_NUMBER, 26376, 100);
+        player.kennel.addPet(x.ID, VERY_LARGE_NUMBER, 26376, 100);
     });
     // Fix broken pets
     // @ts-expect-error

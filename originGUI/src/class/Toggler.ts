@@ -52,7 +52,11 @@ export default class Toggler extends Hack {
 	setEnabled(event: () => unknown) {
 		this.enabled = event;
 		if (localStorage.getItem(this.getStorageKey()) === "true") {
-			this.element.click();
+			try {
+				this.element.click();
+			} catch (e) {
+				console.warn(`[Origin] Failed to restore toggle state for "${this.name}":`, e);
+			}
 		}
 		return this;
 	}

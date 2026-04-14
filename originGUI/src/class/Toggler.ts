@@ -13,6 +13,7 @@ export default class Toggler extends Hack {
 	) {
 		super(parent, name, description);
 		this.element.setAttribute("status", "false");
+		this.migrateOldKey();
 		this.setClick(async () => {
 			this.status = !this.status;
 			if (this.status) {
@@ -23,6 +24,14 @@ export default class Toggler extends Hack {
 				await this.disabled?.();
 			}
 		});
+	}
+
+	private migrateOldKey(): void {
+		const newKey = this.getStorageKey();
+		if (this.name !== newKey && localStorage.getItem(this.name) !== null) {
+			localStorage.setItem(newKey, localStorage.getItem(this.name)!);
+			localStorage.removeItem(this.name);
+		}
 	}
 
 	private getStorageKey(): string {

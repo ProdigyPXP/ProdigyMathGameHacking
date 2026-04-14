@@ -41,7 +41,7 @@ function Popup() {
         <img src={logoUrl} alt="Prodigy Origin" className="popup-logo" />
         <div>
           <h1 className="popup-title">Prodigy Origin</h1>
-          <p className="popup-eyebrow">Mod Loader · v4.1.0</p>
+          <p className="popup-eyebrow">Mod Loader · v4.2.1</p>
         </div>
       </div>
 

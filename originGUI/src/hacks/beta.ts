@@ -170,8 +170,7 @@ new Hack(category.beta, "Hypermax Account [BETA]").setClick(async () => {
 
     // Set the players level to 100
     const level = 100;
-    // @ts-expect-error
-    const h = level.value - 2;
+    const h = level - 2;
     const xpConstant = 1.042;
     player.data.stars = Math.round((1 - Math.pow(xpConstant, h)) / (1 - xpConstant) * 20 + 10);
     player.data.level = 100;
@@ -252,12 +251,12 @@ new Hack(category.beta, "Hypermax Account [BETA]").setClick(async () => {
 
     ids.forEach(id => {
         // @ts-expect-error
-        player.backpack.data[id] = itemify(_.gameData[id].filter(l => id === "follow" ? ![125, 126, 127, 128, 129, 134, 135, 136, 137].includes(l.ID) : l), num.value);
+        player.backpack.data[id] = itemify(_.gameData[id].filter(l => id === "follow" ? ![125, 126, 127, 128, 129, 134, 135, 136, 137].includes(l.ID) : l), num);
     });
     // @ts-expect-error
     _.gameData.dorm.forEach(x =>
         // @ts-expect-error
-        player.house.data.items[x.ID] = { A: [], N: num.value }
+        player.house.data.items[x.ID] = { A: [], N: num }
     );
 
     // Remove bounty notes
@@ -277,10 +276,9 @@ new Hack(category.beta, "Hypermax Account [BETA]").setClick(async () => {
 
     // Get 990000 of all furniture
     const amt = 990000;
-    // @ts-expect-error
     _.gameData.dorm.forEach(x =>
         // @ts-expect-error
-        player.house.data.items[x.ID] = { A: [], N: amt.value }
+        player.house.data.items[x.ID] = { A: [], N: amt }
     );
     console.log("Added 990000 of all furniture.");
 

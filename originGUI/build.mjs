@@ -11,6 +11,9 @@ const srcDir = path.join(rootDir, "src");
 const distDir = path.join(rootDir, "dist");
 const bundlePath = path.join(distDir, "bundle.js");
 
+// Files intentionally excluded from auto-discovery (inert stubs / archived code)
+const EXCLUDED_FILES = new Set(["patched.ts", "patchedMods.ts"]);
+
 async function collectSourceFiles (directory) {
 	const entries = await fs.promises.readdir(directory, { withFileTypes: true });
 	const files = [];
@@ -24,6 +27,10 @@ async function collectSourceFiles (directory) {
 		}
 
 		if (!entry.isFile()) {
+			continue;
+		}
+
+		if (EXCLUDED_FILES.has(entry.name)) {
 			continue;
 		}
 

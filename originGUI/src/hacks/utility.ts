@@ -28,19 +28,21 @@ new Hack(category.utility, "Grab UserID of all players on screen", "Shows you th
     const users : object = current.playerList;
     if (Object.keys(users).length === 0) {
         return Toast.fire("No players found.", "There are no other players on the screen.", "error");
-    } else {
-
-        let contents : string = "";
-        let i : number = 0;
-
-        await Object.keys(users).map((user : string) => {
-            const name : string = Object.entries(users)[i][1].nameText.textSource.source;
-            contents += `<li>uID: ${user} - ${name}</li>`;
-            i++;
-        });
-
-        return Swal.fire({title: "All players on the screen:", html: contents, icon: "info" });
     }
+
+    const ul = document.createElement("ul");
+    for (const [user, data] of Object.entries(users)) {
+        let name = "Unknown";
+        try {
+            name = (data as any).nameText.textSource.source;
+        } catch {
+            // player entity may be partially initialized
+        }
+        const li = document.createElement("li");
+        li.textContent = `uID: ${user} - ${name}`;
+        ul.append(li);
+    }
+    return Swal.fire({ title: "All players on the screen:", html: ul, icon: "info" });
 });
 
 
@@ -70,11 +72,12 @@ new Hack(category.utility, "Load local character [Local]", "Loads your character
                 "accept-language": "en-US,en;q=0.9",
                 authorization: localStorage.JWT_TOKEN,
                 "content-type": "application/json",
-                "sec-ch-ua": "\" Not;A Brand\";v=\"99\", \"Google Chrome\";v=\"91\", \"Chromium\";v=\"91\"",
-                "sec-ch-ua-mobile": "?0",
-                "sec-fetch-dest": "empty",
-                "sec-fetch-mode": "cors",
-                "sec-fetch-site": "same-site"
+                // Browsers set these automatically — kept for reference
+                // "sec-ch-ua": "\" Not;A Brand\";v=\"99\", \"Google Chrome\";v=\"91\", \"Chromium\";v=\"91\"",
+                // "sec-ch-ua-mobile": "?0",
+                // "sec-fetch-dest": "empty",
+                // "sec-fetch-mode": "cors",
+                // "sec-fetch-site": "same-site"
             },
             referrer: "https://play.prodigygame.com/",
             referrerPolicy: "strict-origin-when-cross-origin",
@@ -144,44 +147,7 @@ new Toggler(category.utility, "Enable menu resize", "Allows you to resize the me
 
 
 
-// Begin Edit walkSpeed
-new Hack(category.utility, "Edit walkspeed", "Lets you set your walkspeed.").setClick(async () => {
-    const walkSpeed = await Input.fire("What do you want to set your walk speed to?");
-    if (!walkSpeed.value) return;
-    if (!player._playerContainer) {
-        const interval = setInterval(() => {
-            if (player._playerContainer) {
-                clearInterval(interval);
-                player._playerContainer.walkSpeed = parseFloat(walkSpeed.value);
-            }
-        }, 100);
-    } else player._playerContainer.walkSpeed = parseFloat(walkSpeed.value) || 1.5;
-    return Toast.fire("Success!", `Successfully made walk speed ${parseFloat(walkSpeed.value) || 1.5}!`, "success");
-});
-// End Edit walkSpeed
 
-
-
-
-
-// Begin Toggle Click Teleporting
-let teleportingInterval = -1;
-
-new Toggler(category.utility, "Toggle Click Teleporting").setEnabled(async () => {
-    teleportingInterval = setInterval(() => {
-        try {
-            player._playerContainer.walkSpeed = 500;
-        } catch (e) {
-            // "when switching between scenes, there's a brief moment when player._playerContainer.walkSpeed is inaccessible" - Mustan
-        }
-    });
-    return Toast.fire("Success!", "Successfully enabled teleport click.", "success");
-}).setDisabled(async () => {
-    clearInterval(teleportingInterval);
-    player._playerContainer.walkSpeed = 1.5;
-    return Toast.fire("Success!", "Successfully disabled teleport click.", "success");
-});
-// End Toggle Click Teleporting
 
 
 

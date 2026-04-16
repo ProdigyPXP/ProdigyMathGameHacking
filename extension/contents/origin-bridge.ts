@@ -20,6 +20,12 @@ document.documentElement.setAttribute("data-origin-game-url", defaultGameUrl)
 
 // Async override from storage (custom dev URLs)
 chrome.storage.local.get(["originGameUrl", "originGuiUrl"], (result) => {
+  if (chrome.runtime.lastError) {
+    console.warn("[Origin] storage error:", chrome.runtime.lastError.message)
+    // Still set ready so the game loads with the default URL
+    document.documentElement.setAttribute("data-origin-ready", "1")
+    return
+  }
   if (result.originGameUrl) {
     document.documentElement.setAttribute("data-origin-game-url", result.originGameUrl)
   }

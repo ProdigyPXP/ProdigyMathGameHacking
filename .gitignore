@@ -65,3 +65,4 @@ extension/firefox/.plasmo/
 
 # MCP debug config
 .mcp.json
+.worktrees/

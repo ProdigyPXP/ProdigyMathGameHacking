@@ -54,7 +54,7 @@ new Toggler(category.location, "Toggle Click Teleporting").setEnabled(async () =
         } catch (e) {
             // "when switching between scenes, there's a brief moment when player._playerContainer.walkSpeed is inaccessible" - Mustan
         }
-    });
+    }, 16);
     return Toast.fire("Success!", "Successfully enabled teleport click.", "success");
 }).setDisabled(async () => {
     clearInterval(teleportingInterval);

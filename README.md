@@ -25,6 +25,23 @@ Prodigy Origin enhances your Prodigy Math Game experience with community-built m
 - Configurable custom game/mod bundle URLs via the extension popup
 - Custom login background and logo
 
+### Credits
+
+Thank you to DragonX from PXI fusion for providing the following mods:
+
+- Walk Speed
+- Disable Battle Timer
+- Member Emotes
+- Skip Battle Intro
+- Player Speed in Battle
+- Show Correct Answer
+- Free Crafting
+- Dark Tower Skip
+- Bounty Board Skip
+- Quest Skip
+- Instant Travel
+- Free Morph Marbles
+
 ## Components
 
 | Directory | Description |
